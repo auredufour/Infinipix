@@ -1,0 +1,14 @@
+import { color as COLOR } from '../tokens/color'
+import { motion } from '../tokens/motion'
+import { radius } from '../tokens/radius'
+import { shadow } from '../tokens/shadow'
+import { spacing } from '../tokens/spacing'
+import type { AppTheme } from './types'
+
+export const lightTheme: AppTheme = {
+  color: COLOR.dark,
+  motion,
+  radius,
+  shadow,
+  spacing,
+}
