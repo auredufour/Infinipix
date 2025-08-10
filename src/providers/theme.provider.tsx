@@ -2,8 +2,8 @@ import { type PropsWithChildren, useMemo } from 'react'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 
 import { GlobalStyle } from '../styles/global'
-import { lightTheme } from '../styles/themes/dark'
-import { darkTheme } from '../styles/themes/light'
+import { darkTheme } from '../styles/themes/dark'
+import { lightTheme } from '../styles/themes/light'
 import type { Mode } from '../styles/themes/types'
 
 type Props = PropsWithChildren<{ mode?: Mode }>

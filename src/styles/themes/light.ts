@@ -5,10 +5,11 @@ import { shadow } from '../tokens/shadow'
 import { spacing } from '../tokens/spacing'
 import type { AppTheme } from './types'
 
-export const darkTheme: AppTheme = {
-  color: COLOR.light,
-  motion,
-  radius,
-  shadow,
-  spacing,
+export const lightTheme: AppTheme = {
+  mode: 'light',
+  colors: COLOR.light,
+  motions: motion,
+  radius: radius,
+  shadows: shadow,
+  spacings: spacing,
 }
