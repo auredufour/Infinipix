@@ -1,1 +1,6 @@
-{ "semi": false, "singleQuote": true,  "trailingComma": "all", "proseWrap": "always"}
+{
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "all",
+  "proseWrap": "always"
+}
