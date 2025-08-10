@@ -8,9 +8,10 @@ export type Mode = keyof typeof COLOR
 export type ColorIntent = keyof (typeof COLOR)['light']
 
 export type AppTheme = {
-  color: Record<ColorIntent, string>
-  spacing: typeof spacing
+  mode: Mode
+  colors: Record<ColorIntent, string>
+  spacings: typeof spacing
   radius: typeof radius
-  shadow: typeof shadow
-  motion: typeof motion
+  shadows: typeof shadow
+  motions: typeof motion
 }

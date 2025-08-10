@@ -72,19 +72,19 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
 
   body {
     font-family: 'Canva Sans','Helvetica Neue', Roboto, -apple-system, blinkmacsystemfont, sans-serifsystem-ui, sans-serif;
-    background: ${({ theme }) => theme.color['app-bg']};
-    color: ${({ theme }) => theme.color['strong-fg']};
+    background: ${({ theme }) => theme.colors['app-bg']};
+    color: ${({ theme }) => theme.colors['strong-fg']};
   }
 
   a {
-    color: ${({ theme }) => theme.color['highlight-bg']};
     text-decoration: none;
+    outline: none;
   }
 
-  a:focus-visible,
-  button:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.color['highlight-bg']};
-    outline-offset: 2px;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
   @font-face {
