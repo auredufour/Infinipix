@@ -2,7 +2,7 @@ import type { Photo } from './features/photos/photo.types'
 import { usePhotoList } from './features/photos/usePhoto'
 
 function App() {
-  const { status, data, error } = usePhotoList({ page: 1 })
+  const { status, data, error } = usePhotoList({ page: 1, limit: 30 })
 
   if (status === 'loading') return <p>Loading photos…</p>
   if (status === 'error') return <p>Error: {error?.message}</p>
