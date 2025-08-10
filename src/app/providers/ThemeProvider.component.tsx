@@ -9,7 +9,10 @@ import type { Mode } from '../../styles/themes/types'
 type Props = PropsWithChildren<{ mode?: Mode }>
 
 export function ThemeProvider({ mode = 'light', children }: Props) {
-  const theme = useMemo(() => mode === 'light' ? lightTheme : darkTheme, [mode])
+  const theme = useMemo(
+    () => (mode === 'light' ? lightTheme : darkTheme),
+    [mode],
+  )
 
   return (
     <SCThemeProvider theme={theme}>
