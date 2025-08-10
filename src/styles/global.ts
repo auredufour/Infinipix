@@ -1,5 +1,11 @@
 import { createGlobalStyle } from 'styled-components'
 
+import CanvaSansBold from '../fonts/canva-sans/CanvaSans-Bold.woff2'
+import CanvaSansBoldItalic from '../fonts/canva-sans/CanvaSans-BoldItalic.woff2'
+import CanvaSansMedium from '../fonts/canva-sans/CanvaSans-Medium.woff2'
+import CanvaSansMediumItalic from '../fonts/canva-sans/CanvaSans-MediumItalic.woff2'
+import CanvaSansRegular from '../fonts/canva-sans/CanvaSans-Regular.woff2'
+import CanvaSansRegularItalic from '../fonts/canva-sans/CanvaSans-RegularItalic.woff2'
 import type { AppTheme } from './themes/types'
 
 export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
@@ -65,7 +71,7 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
   }
 
   body {
-    font-family: system-ui, sans-serif;
+    font-family: 'Canva Sans','Helvetica Neue', Roboto, -apple-system, blinkmacsystemfont, sans-serifsystem-ui, sans-serif;
     background: ${({ theme }) => theme.color['app-bg']};
     color: ${({ theme }) => theme.color['strong-fg']};
   }
@@ -79,5 +85,48 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
   button:focus-visible {
     outline: 2px solid ${({ theme }) => theme.color['highlight-bg']};
     outline-offset: 2px;
+  }
+
+  @font-face {
+    font-family: 'Canva Sans';
+    src: url(${CanvaSansRegular}) format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Canva Sans';
+    src: url(${CanvaSansRegularItalic}) format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Canva Sans';
+    src: url(${CanvaSansMedium}) format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Canva Sans';
+    src: url(${CanvaSansMediumItalic}) format('woff2');
+    font-weight: 500;
+    font-style: italic;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Canva Sans';
+    src: url(${CanvaSansBold}) format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Canva Sans';
+    src: url(${CanvaSansBoldItalic}) format('woff2');
+    font-weight: 700;
+    font-style: italic;
+    font-display: swap;
   }
 `
