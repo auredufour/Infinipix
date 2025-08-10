@@ -4,7 +4,6 @@ import { radius } from '../tokens/radius'
 import { shadow } from '../tokens/shadow'
 import { spacing } from '../tokens/spacing'
 
-
 export type Mode = keyof typeof COLOR
 export type ColorIntent = keyof (typeof COLOR)['light']
 

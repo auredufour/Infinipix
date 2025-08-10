@@ -80,4 +80,4 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
     outline: 2px solid ${({ theme }) => theme.color['highlight-bg']};
     outline-offset: 2px;
   }
-`;
+`
