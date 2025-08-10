@@ -1,5 +1,5 @@
 export const radius = {
-  interactive: 6, // buttons, inputs
-  surface: 8, // cards, modals
-  full: 9999, // pill shapes
+  interactive: '6px', // buttons, inputs
+  surface: '8px', // cards, modals
+  full: '9999px', // pill shapes
 } as const
