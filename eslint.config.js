@@ -34,7 +34,7 @@ export default tseslint.config([
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
 
-      // A11y 
+      // A11y
       'jsx-a11y/alt-text': 'warn',
 
       // Imports
@@ -44,7 +44,10 @@ export default tseslint.config([
       // Unused
       'unused-imports/no-unused-imports': 'warn',
       'no-unused-vars': 'off',
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
+      ],
     },
   },
 ])
