@@ -98,6 +98,7 @@ export function Body() {
   const renderItem = useCallback(
     (item: Photo, columnWidth: number) => (
       <PhotoCard
+        key={item.id}
         {...item}
         src={item.download_url}
         columnWidth={columnWidth}
