@@ -2,7 +2,7 @@ import { memo, useEffect, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
 import { useInfinitePhotos } from '../../../features/photos/usePhoto'
-import { MasonryGrid } from '../../shared/grid/grid.component'
+import { DSGridMansory } from '../../shared/grid/grid.component'
 import { bodyCssRules } from './body.styles'
 
 const StyledBodyContainer = styled.div`
@@ -103,11 +103,7 @@ export function Body() {
     <StyledBodyContainer>
       {/* <Loading done={isDone} />
         <ErrorMsg error={status === 'error' ? error : null} /> */}
-      <MasonryGrid
-        images={pages.flatMap((p) => p.items)}
-        columnWidth={280}
-        gap={16}
-      />
+      <DSGridMansory data={pages.flatMap((p) => p.items)} gap={16} />
       <div ref={target} style={{ height: 1, border: '1px solid red' }} />{' '}
       {/* sentinel */}
     </StyledBodyContainer>

@@ -6,6 +6,12 @@ import { PhotoTile } from '../../../features/photos/components/photo-tile.compon
 import type { Photo } from '../../../features/photos/photo.types'
 import { gridCssRules } from './grid.styles'
 import type { DSGridProps } from './grid.types'
+import {
+  calculateColumnWidth,
+  createEmptyColumns,
+  distributePhotos,
+  getColumnCount,
+} from './grid.utils'
 import { DSGridCell } from './subcomponents/grid-cell.component'
 
 const StyledGrid = styled.div`
@@ -35,26 +41,6 @@ const shimmer = keyframes`
   100% {
     background-position: -200% 0;
   }
-`
-
-// Styled Components
-const Container = styled.div`
-  min-height: 100vh;
-  background-color: #f9fafb;
-  padding: 2rem;
-`
-
-const Content = styled.div`
-  max-width: 1280px;
-  margin: 0 auto;
-`
-
-const Title = styled.h1`
-  font-size: 1.875rem;
-  font-weight: bold;
-  color: #1f2937;
-  margin-bottom: 2rem;
-  text-align: center;
 `
 
 const GridContainer = styled.div`
@@ -100,16 +86,7 @@ const SkeletonLoader = styled.div<{ isLoaded: boolean }>`
   transition: opacity 0.3s ease;
 `
 
-const Image = styled.img<{ isLoaded: boolean }>`
-  width: 100%;
-  height: auto;
-  border: 1px solid green;
-  // opacity: ${(props) => (props.isLoaded ? 1 : 0)};
-  // transition: opacity 0.5s ease;
-`
-
-// Masonry Image Component
-const MasonryImage = ({
+const DSGridImage = ({
   src,
   width,
   height,
@@ -182,67 +159,39 @@ const MasonryImage = ({
   )
 }
 
-// Main Masonry Component
-export const MasonryGrid = ({
-  images,
-  gap = 16,
+export const DSGridMansory = ({
+  data,
+  gap = 24,
 }: {
-  images: Photo[]
+  data: Photo[]
   gap: number
 }) => {
   const [columns, setColumns] = useState<Photo[][]>([])
   const [columnCount, setColumnCount] = useState(0)
   const [columnWidth, setColumnWidth] = useState(0)
-  const containerRef = useRef(null)
+  const containerRef = useRef<HTMLDivElement>(null)
 
+  // Calculate number of columns based on screen width
   const calculateColumns = useCallback(() => {
     if (!containerRef.current) return
 
-    const containerWidth = (containerRef.current as HTMLDivElement).offsetWidth
-    const screenWidth = window.innerWidth
-
-    let count = 3
-    if (screenWidth < 576) count = 1
-    else if (screenWidth < 992) count = 2
+    const containerWidth = containerRef.current.offsetWidth
+    const count = getColumnCount(window.innerWidth)
 
     setColumnCount((prev) => {
-      if (prev !== count) {
-        setColumns(Array.from({ length: count }, () => []))
-      }
+      if (prev !== count) setColumns(createEmptyColumns<Photo>(count))
       return count
     })
 
-    // Compute column width so items fit exactly including the gaps
-    const computedWidth = Math.floor(
-      (containerWidth - gap * (count - 1)) / count,
-    )
-    setColumnWidth(computedWidth)
+    setColumnWidth(calculateColumnWidth(containerWidth, count, gap))
   }, [gap])
 
   // Distribute images across columns
   useEffect(() => {
-    if (columnCount === 0 || !images.length) return
+    if (columnCount === 0 || !data.length) return
 
-    const newColumns: Photo[][] = Array.from({ length: columnCount }, () => [])
-    const columnHeights = Array(columnCount).fill(0)
-
-    images.forEach((image, index) => {
-      // Find the shortest column
-      const shortestColumnIndex = columnHeights.indexOf(
-        Math.min(...columnHeights),
-      )
-
-      // Add image to shortest column
-      newColumns[shortestColumnIndex].push(image)
-
-      // Update column height (approximate)
-      const aspectRatio = image.height / image.width
-      const imageHeight = columnWidth * aspectRatio
-      columnHeights[shortestColumnIndex] += imageHeight + gap
-    })
-
-    setColumns(newColumns)
-  }, [images, columnCount, columnWidth, gap])
+    setColumns(distributePhotos(data, columnCount, columnWidth, gap))
+  }, [data, columnCount, columnWidth, gap])
 
   // Handle window resize
   useEffect(() => {
@@ -268,7 +217,7 @@ export const MasonryGrid = ({
         {columns.map((column, columnIndex) => (
           <Column key={columnIndex} gap={gap} width={columnWidth}>
             {column.map((image: Photo) => (
-              <MasonryImage
+              <DSGridImage
                 key={image.id}
                 src={image.download_url}
                 width={image.width}
