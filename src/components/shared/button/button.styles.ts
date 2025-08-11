@@ -15,12 +15,28 @@ const getBackgroundColor = (
   return map[variant as keyof typeof map] ?? map.plain
 }
 
+const getColor = (
+  theme: AppTheme,
+  variant: DSButtonProps['variant'] = 'plain',
+) => {
+  const map = {
+    plain: theme.colors['strong-fg'],
+    'high-emphasis': theme.colors['strong-fg-inverted'],
+  } as const
+
+  return map[variant as keyof typeof map] ?? map.plain
+}
+
 export const buttonCssRules = css<DSButtonProps>`
-  background-color: ${({ theme, variant }) =>
-    getBackgroundColor(theme, variant)};
+  ${({ theme, variant }) => `
+  --backgroundColor: ${getBackgroundColor(theme, variant)};
+  --color: ${getColor(theme, variant)};
+  `}
+
+  background-color: var(--backgroundColor);
   border-radius: ${({ theme }) => theme.radius.full};
   border: 0;
-  color: ${({ theme }) => theme.colors['strong-fg']};
+  color: var(--color);
   font-weight: 500;
   outline: none;
   padding: ${({ theme }) => `${theme.spacings[12]} ${theme.spacings[16]}`};
@@ -28,7 +44,7 @@ export const buttonCssRules = css<DSButtonProps>`
 
   &:hover,
   &:focus-visible {
-    background-color: #f7f7f7;
+    background-color: color-mix(in srgb, var(--backgroundColor) 80%, black);
   }
 
   &:focus-visible {
