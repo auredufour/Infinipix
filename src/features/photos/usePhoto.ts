@@ -214,5 +214,5 @@ export function useInfinitePhotos(limit = 30) {
   // Observe the sentinel
   useIntersectionObserver(sentinelRef, handleIntersection, rootMargin)
 
-  return { pages, target: sentinelRef }
+  return { pages, sentinel: sentinelRef }
 }
