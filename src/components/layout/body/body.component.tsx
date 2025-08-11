@@ -1,9 +1,8 @@
 import { memo, useEffect, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
-import { PhotoTile } from '../../../features/photos/components/photo-tile.component'
-import { usePhotoList } from '../../../features/photos/usePhoto'
-import { DSGrid } from '../../shared/grid/grid.component'
+import { useInfinitePhotos } from '../../../features/photos/usePhoto'
+import { MasonryGrid } from '../../shared/grid/grid.component'
 import { bodyCssRules } from './body.styles'
 
 const StyledBodyContainer = styled.div`
@@ -96,28 +95,21 @@ const ErrorMsg = memo(({ error }: { error?: Error | null }) =>
 
 /* ---------- main body ---------- */
 export function Body() {
-  const { status, data, error } = usePhotoList({ page: 1, limit: 30 })
-  const isDone = status === 'success' || status === 'error'
+  const { pages, target } = useInfinitePhotos(30)
+  //   const { status, data, error } = usePhotoList({ page: 1, limit: 30 })
+  //   const isDone = status === 'success' || status === 'error'
 
   return (
     <StyledBodyContainer>
-      <Loading done={isDone} />
-      <ErrorMsg error={status === 'error' ? error : null} />
-
-      {status === 'success' && (
-        <DSGrid aria-labelledby="photo-gallery-title">
-          {data?.items.map((p) => (
-            <DSGrid.Cell key={p.id}>
-              <PhotoTile
-                src={p.download_url}
-                width={p.width}
-                author={p.author}
-                downloadUrl={p.download_url}
-              />
-            </DSGrid.Cell>
-          ))}
-        </DSGrid>
-      )}
+      {/* <Loading done={isDone} />
+        <ErrorMsg error={status === 'error' ? error : null} /> */}
+      <MasonryGrid
+        images={pages.flatMap((p) => p.items)}
+        columnWidth={280}
+        gap={16}
+      />
+      <div ref={target} style={{ height: 1, border: '1px solid red' }} />{' '}
+      {/* sentinel */}
     </StyledBodyContainer>
   )
 }

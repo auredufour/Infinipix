@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import type { RefObject } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { fetchPaginatedPhotos } from './photo.data'
+import type { Photo } from './photo.types'
 import type {
   PaginationLinks,
   PaginationParams,
@@ -15,12 +17,24 @@ interface AsyncState<T> {
   status: AsyncStatus
 }
 
+const LINK_REGEX = /<[^>]*[?&]page=(\d+)[^>]*>\s*;\s*rel="(\w+)"/g
+
+/**
+ * Creates an initial state for an asynchronous operation.
+ *
+ * @param T - The type of data to store in the state.
+ * @returns An AsyncState object with the initial state.
+ */
 function createInitialState<T>(): AsyncState<T> {
   return { status: null, data: null, error: null }
 }
 
-const LINK_REGEX = /<[^>]*[?&]page=(\d+)[^>]*>\s*;\s*rel="(\w+)"/g
-
+/**
+ * Parses a link header and extracts pagination links.
+ *
+ * @param header - The link header to parse.
+ * @returns An object containing the pagination links.
+ */
 function parseLinkHeader(header: string | null): PaginationLinks {
   if (!header) {
     return {}
@@ -34,6 +48,80 @@ function parseLinkHeader(header: string | null): PaginationLinks {
   return links
 }
 
+function getNextPage(header: string | null): number | undefined {
+  if (!header) return
+  // Example header:
+  // <https://picsum.photos/v2/list?page=2&limit=30>; rel="next"
+  const nextPart = header.split(',').find((p) => p.includes('rel="next"'))
+  if (!nextPart) return
+  const match = nextPart.match(/[?&]page=(\d+)/)
+  return match ? Number(match[1]) : undefined
+}
+
+// New page definition for the infinite-scroll hook
+export type InfinitePhotoPage = { items: Photo[]; next?: number }
+
+/**
+ * Keeps a rootMargin string in sync with the current viewport height.
+ * Example return value: "800px 0px" (when viewport height = 800).
+ */
+function useRootMargin() {
+  const [rootMargin, setRootMargin] = useState(
+    () => `${window.innerHeight}px 0px`,
+  )
+
+  useEffect(() => {
+    const handleResize = () => setRootMargin(`${window.innerHeight}px 0px`)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  return rootMargin
+}
+
+/**
+ * Declarative wrapper around IntersectionObserver.
+ * Automatically disconnects on unmount or when dependencies change.
+ */
+function useIntersectionObserver(
+  targetRef: RefObject<Element | null>,
+  callback: IntersectionObserverCallback,
+  rootMargin: string,
+  threshold = 0.1,
+) {
+  useEffect(() => {
+    const node = targetRef.current
+    if (!node) return
+
+    const observer = new IntersectionObserver(callback, {
+      root: null,
+      rootMargin,
+      threshold,
+    })
+
+    observer.observe(node)
+    return () => observer.disconnect()
+  }, [targetRef, callback, rootMargin, threshold])
+}
+
+/** Deduplicate photo items across pages before appending */
+function appendUniquePhotos(
+  prev: InfinitePhotoPage[],
+  items: Photo[],
+  next?: number,
+): InfinitePhotoPage[] {
+  const seen = new Set(prev.flatMap((p) => p.items.map((i) => i.id)))
+  const unique = items.filter((i) => !seen.has(i.id))
+  return [...prev, { items: unique, next }]
+}
+
+/**
+ * Fetches a single page of photos from the Picsum API.
+ *
+ * @param page - The page number to fetch.
+ * @param limit - The number of photos to fetch per page.
+ * @returns An object containing the photos and pagination links.
+ */
 export function usePhotoList({
   page = 1,
   limit = 30,
@@ -72,4 +160,59 @@ export function usePhotoList({
   }, [page, limit])
 
   return state
+}
+
+/**
+ * Client-side infinite-scroll hook for Picsum photos list.
+ * Keeps previously fetched pages in memory and exposes a bottom-sentinel ref that
+ * loads the next page when scrolled into view.
+ *
+ * @param limit - The number of photos to fetch per page.
+ * @returns An object containing the pages and a sentinel ref.
+ */
+export function useInfinitePhotos(limit = 30) {
+  const nextPageRef = useRef<number | null>(1)
+  const sentinelRef = useRef<HTMLDivElement | null>(null)
+
+  // Dynamically calculated margin so we start fetching when the sentinel is one viewport away
+  const rootMargin = useRootMargin()
+  const [pages, setPages] = useState<InfinitePhotoPage[]>([])
+
+  /**
+   * Fetches the page referenced by `nextPageRef` and appends it to the list.
+   * The ref is used so this callback doesn’t change whenever pages are added,
+   * preventing unnecessary teardown / re-creation of the IntersectionObserver.
+   */
+  const fetchNextPage = useCallback(async () => {
+    const page = nextPageRef.current
+    if (!page) {
+      return
+    }
+
+    const { items, linkHeader } = await fetchPaginatedPhotos({ page, limit })
+    const next = getNextPage(linkHeader)
+    nextPageRef.current = next ?? null
+
+    setPages((prev) => appendUniquePhotos(prev, items, next))
+  }, [limit])
+
+  // Load the first page on mount
+  useEffect(() => {
+    fetchNextPage()
+  }, [fetchNextPage])
+
+  /** Callback fired by the IntersectionObserver */
+  const handleIntersection = useCallback<IntersectionObserverCallback>(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        fetchNextPage()
+      }
+    },
+    [fetchNextPage],
+  )
+
+  // Observe the sentinel
+  useIntersectionObserver(sentinelRef, handleIntersection, rootMargin)
+
+  return { pages, target: sentinelRef }
 }

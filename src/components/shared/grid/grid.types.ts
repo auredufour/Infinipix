@@ -1,6 +1,8 @@
 import type { PropsWithChildren } from 'react'
 
-export type DSGridProps = PropsWithChildren
+export interface DSGridProps extends PropsWithChildren {
+  id?: string
+}
 
 export interface GridCellProps extends PropsWithChildren {
   height?: number

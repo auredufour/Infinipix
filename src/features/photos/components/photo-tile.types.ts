@@ -4,4 +4,7 @@ export type PhotoTileProps = {
   downloadUrl: string
   src: string
   width: number
+  height: number
+  onLoad?: () => void
+  isLoaded?: boolean
 }

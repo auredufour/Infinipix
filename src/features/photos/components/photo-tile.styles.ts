@@ -1,10 +1,11 @@
 import { css } from 'styled-components'
 
-export const tileFigureCssRules = css`
-  position: relative;
+export const tileFigureCssRules = css<{ width: number; height: number }>`
+  aspect-ratio: ${({ width, height }) => `${width} / ${height}`};
+  border-radius: ${({ theme }) => theme.radius.surface};
   display: flex;
   overflow: hidden;
-  border-radius: ${({ theme }) => theme.radius.surface};
+  position: relative;
 `
 
 export const tileActionContainerCssRules = css`
