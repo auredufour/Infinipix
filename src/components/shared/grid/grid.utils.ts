@@ -1,5 +1,3 @@
-import type { Photo } from '../../../features/photos/photo.types'
-
 const SMALL_SCREEN_WIDTH = 576
 const MEDIUM_SCREEN_WIDTH = 992
 
@@ -21,20 +19,20 @@ export function calculateColumnWidth(
   return Math.floor((containerWidth - gap * (count - 1)) / count)
 }
 
-export function distributePhotos(
-  photos: Photo[],
+export function distributePhotos<T extends { width: number; height: number }>(
+  items: T[],
   columnCount: number,
   columnWidth: number,
   gap: number,
-): Photo[][] {
-  const columns = createEmptyColumns<Photo>(columnCount)
+): T[][] {
+  const columns = createEmptyColumns<T>(columnCount)
   const heights = Array(columnCount).fill(0)
 
-  photos.forEach((photo) => {
+  items.forEach((item) => {
     const shortest = heights.indexOf(Math.min(...heights))
-    columns[shortest].push(photo)
+    columns[shortest].push(item)
 
-    const aspect = photo.height / photo.width
+    const aspect = item.height / item.width
     heights[shortest] += columnWidth * aspect + gap
   })
 
