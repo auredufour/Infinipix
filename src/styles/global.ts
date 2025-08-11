@@ -81,6 +81,14 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
     outline: none;
   }
 
+  button {
+    border: 0;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
   ul {
     list-style: none;
     padding: 0;
