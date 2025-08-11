@@ -4,11 +4,16 @@ import logo02 from '../../../assets/logo-02.png'
 import { DSLink } from '../../shared/link/link.component'
 import { DSMenu } from '../../shared/menu/menu.component'
 import {
+  headerContainerCssRules,
   headerCssRules,
   headerLogoCssRules,
   headerMenuCssRules,
   headerNavListCssRules,
 } from './header.styles'
+
+const StyledContainer = styled.div`
+  ${headerContainerCssRules}
+`
 
 const StyledHeader = styled.header`
   ${headerCssRules}
@@ -28,29 +33,29 @@ const StyledMenuContainer = styled.div`
 
 export function Header() {
   return (
-    <StyledHeader>
-      <div>
+    <StyledContainer>
+      <StyledHeader>
         <a href="/">
           <StyledLogo src={logo02} alt="Infinipix" />
         </a>
-      </div>
-      <nav>
-        <StyledList>
-          <li role="none">
-            <DSLink role="menuitem" tabIndex={-1} href="/">
-              Home
-            </DSLink>
-          </li>
-          <li role="none">
-            <DSLink role="menuitem" tabIndex={-1} href="/">
-              About
-            </DSLink>
-          </li>
-        </StyledList>
-        <StyledMenuContainer>
-          <DSMenu>Menu</DSMenu>
-        </StyledMenuContainer>
-      </nav>
-    </StyledHeader>
+        <nav aria-label="Primary">
+          <StyledList>
+            <li role="none">
+              <DSLink role="menuitem" tabIndex={-1} href="/">
+                Home
+              </DSLink>
+            </li>
+            <li role="none">
+              <DSLink role="menuitem" tabIndex={-1} href="/">
+                About
+              </DSLink>
+            </li>
+          </StyledList>
+          <StyledMenuContainer>
+            <DSMenu>Menu</DSMenu>
+          </StyledMenuContainer>
+        </nav>
+      </StyledHeader>
+    </StyledContainer>
   )
 }
