@@ -15,6 +15,8 @@ export const DSImage = ({
   height,
   src,
   width,
+  onLoad,
+  isLoaded,
 }: DSImageProps) => {
   return (
     <StyledImage
@@ -25,6 +27,8 @@ export const DSImage = ({
       loading="lazy"
       src={src}
       width={width}
+      onLoad={onLoad}
+      isLoaded={isLoaded}
     />
   )
 }

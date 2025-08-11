@@ -22,7 +22,9 @@ export const StyledActionContainer = styled.div`
   ${tileActionContainerCssRules}
 `
 
-const StyledTile = styled.figure`
+const StyledTile = styled.figure.withConfig({
+  shouldForwardProp: (prop) => prop !== 'width' && prop !== 'height',
+})<{ width: number; height: number }>`
   ${tileFigureCssRules}
 
   &:hover ${StyledActionContainer},
@@ -39,6 +41,9 @@ export function PhotoTile({
   width,
   author,
   downloadUrl,
+  height,
+  isLoaded,
+  onLoad,
 }: PhotoTileProps) {
   const handleOnDownload = useCallback(
     async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -59,13 +64,20 @@ export function PhotoTile({
   }, [])
 
   return (
-    <StyledTile>
+    <StyledTile width={width} height={height}>
       <StyledTileTrigger
         type="button"
         onClick={handleOnClick}
         aria-label={`Open preview: ${alt}`}
       >
-        <DSImage alt={author} borderRadius={12} src={src} width={width} />
+        <DSImage
+          alt={author}
+          borderRadius={12}
+          src={src}
+          width="100%"
+          onLoad={onLoad}
+          isLoaded={isLoaded}
+        />
       </StyledTileTrigger>
 
       <StyledActionContainer>

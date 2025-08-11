@@ -1,9 +1,10 @@
-import { memo, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useState } from 'react'
 import styled, { css, keyframes } from 'styled-components'
 
-import { PhotoTile } from '../../../features/photos/components/photo-tile.component'
-import { usePhotoList } from '../../../features/photos/usePhoto'
-import { DSGrid } from '../../shared/grid/grid.component'
+import { PhotoCard } from '../../../features/photos/components/photo-tile.component'
+import type { Photo } from '../../../features/photos/photo.types'
+import { useInfinitePhotos } from '../../../features/photos/usePhoto'
+import { DSGridMansory } from '../../shared/grid/grid.component'
 import { bodyCssRules } from './body.styles'
 
 const StyledBodyContainer = styled.div`
@@ -90,34 +91,31 @@ const Loading = memo(({ done }: { done: boolean }) => {
   )
 })
 
-const ErrorMsg = memo(({ error }: { error?: Error | null }) =>
-  error ? <p role="alert">{error.message}</p> : null,
-)
-
 /* ---------- main body ---------- */
 export function Body() {
-  const { status, data, error } = usePhotoList({ page: 1, limit: 30 })
-  const isDone = status === 'success' || status === 'error'
+  const { pages, sentinel } = useInfinitePhotos(30)
+
+  const renderItem = useCallback(
+    (item: Photo, columnWidth: number) => (
+      <PhotoCard
+        {...item}
+        src={item.download_url}
+        columnWidth={columnWidth}
+        alt={item.author}
+        downloadUrl={item.download_url}
+      />
+    ),
+    [],
+  )
 
   return (
     <StyledBodyContainer>
-      <Loading done={isDone} />
-      <ErrorMsg error={status === 'error' ? error : null} />
-
-      {status === 'success' && (
-        <DSGrid aria-labelledby="photo-gallery-title">
-          {data?.items.map((p) => (
-            <DSGrid.Cell key={p.id}>
-              <PhotoTile
-                src={p.download_url}
-                width={p.width}
-                author={p.author}
-                downloadUrl={p.download_url}
-              />
-            </DSGrid.Cell>
-          ))}
-        </DSGrid>
-      )}
+      <DSGridMansory
+        data={pages.flatMap((p) => p.items)}
+        gap={16}
+        renderItem={renderItem}
+      />
+      <div ref={sentinel} style={{ height: 1 }} />
     </StyledBodyContainer>
   )
 }
