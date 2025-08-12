@@ -1,11 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import styled from 'styled-components'
 
-import {
-  columnCssRules,
-  columnsWrapperCssRules,
-  gridCssRules,
-} from './grid.styles'
+import { SCColumn, SCColumnsWrapper, SCGridContainer } from './grid.styles'
 import type { DSGridMasonryProps } from './grid.types'
 import {
   calculateColumnWidth,
@@ -13,18 +8,6 @@ import {
   distributePhotos,
   getColumnCount,
 } from './grid.utils'
-
-const StyledGridContainer = styled.div`
-  ${gridCssRules}
-`
-
-const StyledColumnsWrapper = styled.div<{ gap: number }>`
-  ${columnsWrapperCssRules}
-`
-
-const StyledColumn = styled.div<{ gap: number; width: number }>`
-  ${columnCssRules}
-`
 
 export const DSGridMansory = <
   T extends { id: string; width: number; height: number },
@@ -73,14 +56,14 @@ export const DSGridMansory = <
   }, [calculateColumns])
 
   return (
-    <StyledGridContainer ref={containerRef}>
-      <StyledColumnsWrapper gap={gap}>
+    <SCGridContainer ref={containerRef}>
+      <SCColumnsWrapper $gap={gap}>
         {columns.map((column, columnIndex) => (
-          <StyledColumn key={columnIndex} gap={gap} width={columnWidth}>
+          <SCColumn key={columnIndex} $gap={gap} $width={columnWidth}>
             {column.map((item) => renderItem(item as T, columnWidth))}
-          </StyledColumn>
+          </SCColumn>
         ))}
-      </StyledColumnsWrapper>
-    </StyledGridContainer>
+      </SCColumnsWrapper>
+    </SCGridContainer>
   )
 }
