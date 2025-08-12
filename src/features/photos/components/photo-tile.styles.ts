@@ -38,10 +38,12 @@ export const SCActionContainer = styled.div`
   position: absolute;
   right: 0;
   visibility: hidden;
-  transition: opacity 0.25s;
+  transition:
+    opacity 0.25s ease,
+    margin-bottom 0.25s ease,
+    visibility 0.25s ease;
 
   background: linear-gradient(
-    to top,
     to top,
     color-mix(in srgb, var(--overlay-color) 80%, transparent) 0%,
     color-mix(in srgb, var(--overlay-color) 60%, transparent) 25%,

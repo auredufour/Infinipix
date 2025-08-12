@@ -1,4 +1,4 @@
-import styled, { keyframes } from 'styled-components'
+import styled, { css, keyframes } from 'styled-components'
 
 import type { DSSkeletonProps } from './skeleton.types'
 
@@ -18,14 +18,20 @@ export const SCSkeletonLoader = styled.div<{
   border-radius: inherit;
   inset: 0;
   opacity: ${({ $state }) => ($state === 'inactive' ? 0 : 1)};
-  overflow: hidden;
   position: absolute;
+  pointer-events: none;
   transition: opacity 0.3s ease;
   z-index: 1;
+  overflow: hidden;
 
   &::before {
     content: '';
-    animation: ${shimmer} 2.5s ease-in-out infinite;
+    animation: ${({ $state }) =>
+      $state === 'loading'
+        ? css`
+            ${shimmer} 2.5s ease-in-out infinite
+          `
+        : 0};
     position: absolute;
     top: 0;
     left: 0;
