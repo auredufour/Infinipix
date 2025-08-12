@@ -1,6 +1,11 @@
 module.exports = {
   testEnvironment: 'jest-environment-jsdom',
-  transform: { '^.+\\.(t|j)sx?$': 'babel-jest' },
+  // Transform TypeScript, JavaScript **and** ESM `.mjs` files through Babel so that
+  // packages shipping ESM only (e.g. `lucide-react/dynamic`) can run in Jest.
+  transform: { '^.+\\.(mjs|[tj]sx?)$': 'babel-jest' },
+  // By default Jest skips `node_modules` from transformation. We need to make an
+  // exception for `lucide-react` because it is published as ESM only.
+  transformIgnorePatterns: ['/node_modules/(?!(lucide-react)/)'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '\\.(css|scss)$': 'identity-obj-proxy',
