@@ -1,13 +1,5 @@
-import styled from 'styled-components'
-
-import { imageCssRules } from './image.styles'
+import { SCImage } from './image.styles'
 import type { DSImageProps } from './image.types'
-
-const StyledImage = styled.img.withConfig({
-  shouldForwardProp: (prop) => !['borderRadius'].includes(prop),
-})<DSImageProps>`
-  ${imageCssRules}
-`
 
 export const DSImage = ({
   alt = '',
@@ -17,27 +9,25 @@ export const DSImage = ({
   isLoaded,
   loading = 'lazy',
   onLoad,
-  sizes,
   src,
   srcSet,
   width,
-  ...rest
+  ...props
 }: DSImageProps) => {
   return (
-    <StyledImage
+    <SCImage
+      $borderRadius={borderRadius}
+      $isLoaded={isLoaded}
       alt={alt}
-      borderRadius={borderRadius}
       decoding="auto"
+      fetchPriority={fetchPriority}
       height={height}
       loading={loading}
+      onLoad={onLoad}
       src={src}
       srcSet={srcSet}
-      sizes={sizes}
       width={width}
-      fetchPriority={fetchPriority}
-      onLoad={onLoad}
-      isLoaded={isLoaded}
-      {...rest}
+      {...props}
     />
   )
 }

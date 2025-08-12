@@ -1,18 +1,18 @@
-import { css } from 'styled-components'
+import styled from 'styled-components'
 
-export const gridCssRules = css`
+export const SCGridContainer = styled.div`
   width: 100%;
 `
 
-export const columnsWrapperCssRules = css<{ gap: number }>`
+export const SCColumnsWrapper = styled.div<{ $gap: number }>`
   display: flex;
   justify-content: center;
-  gap: ${(props) => props.gap}px;
+  gap: ${({ $gap }) => $gap}px;
 `
 
-export const columnCssRules = css<{ gap: number; width: number }>`
+export const SCColumn = styled.div<{ $gap: number; $width: number }>`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => props.gap}px;
-  width: ${(props) => props.width}px;
+  gap: ${({ $gap }) => $gap}px;
+  width: ${({ $width }) => $width}px;
 `

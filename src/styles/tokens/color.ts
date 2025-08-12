@@ -9,6 +9,7 @@ const PRIMARY = {
     'overlay-bg': 'rgba(0,0,0,0.6)',
     outline: '#e5e7eb',
     'soft-bg': '#ccc',
+    'strong-bg-control': '#f7f7f7',
   },
   dark: {
     'app-bg': '#111213',
@@ -20,6 +21,7 @@ const PRIMARY = {
     'overlay-bg': 'rgba(0,0,0,0.6)',
     outline: '#e5e7eb',
     'soft-bg': '#ccc',
+    'strong-bg-control': '#222',
   },
 } as const
 
