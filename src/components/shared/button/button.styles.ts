@@ -1,14 +1,17 @@
-import { css } from 'styled-components'
+import styled from 'styled-components'
 
 import type { AppTheme } from '../../../styles/themes/types'
 import type { DSButtonProps } from './button.types'
 
+type StyledProps = { $variant?: DSButtonProps['variant'] }
+
 const getBackgroundColor = (
   theme: AppTheme,
-  variant: DSButtonProps['variant'] = 'plain',
+  variant: StyledProps['$variant'] = 'plain',
 ) => {
   const map = {
     plain: 'transparent',
+    'low-emphasis': theme.colors['app-bg'],
     'high-emphasis': theme.colors['highlight-bg'],
   } as const
 
@@ -17,30 +20,47 @@ const getBackgroundColor = (
 
 const getColor = (
   theme: AppTheme,
-  variant: DSButtonProps['variant'] = 'plain',
+  variant: StyledProps['$variant'] = 'plain',
 ) => {
   const map = {
     plain: theme.colors['strong-fg'],
+    'low-emphasis': theme.colors['strong-fg'],
     'high-emphasis': theme.colors['strong-fg-inverted'],
   } as const
 
   return map[variant as keyof typeof map] ?? map.plain
 }
 
-export const buttonCssRules = css<DSButtonProps>`
-  ${({ theme, variant }) => `
-  --backgroundColor: ${getBackgroundColor(theme, variant)};
-  --color: ${getColor(theme, variant)};
-  `}
+const getBorderColor = (
+  theme: AppTheme,
+  variant: StyledProps['$variant'] = 'plain',
+) => {
+  const map = {
+    plain: 'transparent',
+    'low-emphasis': theme.colors['outline'],
+    'high-emphasis': theme.colors['highlight-bg'],
+  } as const
+  return map[variant as keyof typeof map] ?? map.plain
+}
+
+export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
+  ${({ theme, $variant }) => `
+--backgroundColor: ${getBackgroundColor(theme, $variant)};
+--borderColor: ${getBorderColor(theme, $variant)};
+--color: ${getColor(theme, $variant)};
+`}
 
   background-color: var(--backgroundColor);
-  border-radius: ${({ theme }) => theme.radius.full};
-  border: 0;
+  border-radius: ${({ theme }) => theme.radius.surface};
+  border: 1px solid var(--borderColor);
   color: var(--color);
   font-weight: 500;
   outline: none;
-  padding: ${({ theme }) => `${theme.spacings[12]} ${theme.spacings[16]}`};
+  padding: ${({ theme }) => `${theme.spacings[12]} ${theme.spacings[24]}`};
   transition: background-color 0.25s ease;
+  display: flex;
+  align-items: center;
+  column-gap: ${({ theme }) => theme.spacings[8]};
 
   &:hover,
   &:focus-visible {
