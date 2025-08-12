@@ -10,7 +10,7 @@ export const SCTileTrigger = styled(DSModal.Trigger)`
 `
 
 export const SCImageContainer = styled.div<{ width: number; height: number }>`
-  border-radius: ${({ theme }) => `${theme.radius.surface}px`};
+  border-radius: ${({ theme }) => theme.radius.surface};
   position: relative;
   height: ${({ height }) => height}px;
   overflow: hidden;

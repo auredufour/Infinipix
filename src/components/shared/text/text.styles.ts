@@ -1,4 +1,4 @@
-import { css } from 'styled-components'
+import styled from 'styled-components'
 
 import type { AppTheme } from '../../../styles/themes/types'
 import type { DSTextProps } from './text.types'
@@ -23,7 +23,10 @@ const getWeight = (theme: AppTheme, weight?: keyof AppTheme['fontWeight']) => {
     : weightMap.regular
 }
 
-export const textCssRules = css<DSTextProps>`
+export const SCText = styled.p.withConfig({
+  shouldForwardProp: (prop) =>
+    !['color', 'size', 'weight'].includes(prop as string),
+})<DSTextProps>`
   color: ${({ theme, color }) => getColor(theme, color)};
   font-size: ${({ theme, size }) => getSize(theme, size)};
   font-weight: ${({ theme, weight }) => getWeight(theme, weight)};

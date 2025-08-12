@@ -9,7 +9,7 @@ export const DSIcon = ({
   ...props
 }: DSIconProps) => {
   const accessibilityProps = ariaLabel
-    ? { role: 'img', 'aria-hidden': false }
+    ? { role: 'img', 'aria-label': ariaLabel, 'aria-hidden': false }
     : { 'aria-hidden': true }
 
   return (
