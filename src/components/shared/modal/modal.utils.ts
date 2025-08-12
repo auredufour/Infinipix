@@ -12,6 +12,8 @@ export const composedRefs = <T>(...refs: Array<Ref<T> | undefined>) => {
       if (typeof ref === 'function') {
         ref(node)
       } else {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore - overriding readonly to allow ref assignment
         ;(ref as RefObject<T | null>).current = node
       }
     })

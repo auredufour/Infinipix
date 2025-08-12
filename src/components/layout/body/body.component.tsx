@@ -5,11 +5,21 @@ import { PhotoCard } from '../../../features/photos/components/photo-tile.compon
 import type { Photo } from '../../../features/photos/photo.types'
 import { useInfinitePhotos } from '../../../features/photos/usePhoto'
 import { DSGridMansory } from '../../shared/grid/grid.component'
+import { DSIcon } from '../../shared/icon/icon.component'
+import { DSInput } from '../../shared/input/input.component'
 import { bodyCssRules } from './body.styles'
 
 const StyledBodyContainer = styled.div`
   ${bodyCssRules}
 `
+
+const SearchInput = () => {
+  return (
+    <div style={{ paddingBottom: '40px' }}>
+      <DSInput label="Search" hideLabel  accessoryLeft={<DSIcon name="search" color='soft-fg' />} />
+    </div>
+  )
+}
 
 /* ---------- main body ---------- */
 export function Body() {
@@ -31,6 +41,7 @@ export function Body() {
 
   return (
     <StyledBodyContainer>
+      <SearchInput />
       <DSGridMansory
         data={pages.flatMap((p) => p.items)}
         gap={16}
