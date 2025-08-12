@@ -1,14 +1,28 @@
-import { css } from 'styled-components'
+import styled from 'styled-components'
 
-export const tileFigureCssRules = css<{ width: number; height: number }>`
-  aspect-ratio: ${({ width, height }) => `${width} / ${height}`};
-  border-radius: ${({ theme }) => theme.radius.surface};
-  display: flex;
-  overflow: hidden;
-  position: relative;
+import { DSModal } from '../../../components/shared/modal/modal.component'
+
+export const SCTileTrigger = styled(DSModal.Trigger)`
+  all: unset;
+  cursor: pointer;
+  display: block;
+  width: 100%;
 `
 
-export const tileActionContainerCssRules = css`
+export const SCImageContainer = styled.div<{ width: number; height: number }>`
+  border-radius: ${({ theme }) => `${theme.radius.surface}px`};
+  position: relative;
+  height: ${({ height }) => height}px;
+  overflow: hidden;
+  transition: transform 0.2s ease-out;
+  width: ${({ width }) => width}px;
+
+  &:hover {
+    transform: scale(1.02);
+  }
+`
+
+export const SCActionContainer = styled.div`
   ${({ theme }) => `
     --overlay-color: ${theme.colors['overlay-bg']};
   `}
@@ -23,16 +37,31 @@ export const tileActionContainerCssRules = css`
   padding: ${({ theme }) => theme.spacings[16]};
   position: absolute;
   right: 0;
-  transition:
-    opacity 0.25s,
-    margin-bottom 0.25s;
   visibility: hidden;
+  transition: opacity 0.25s;
 
   background: linear-gradient(
+    to top,
     to top,
     color-mix(in srgb, var(--overlay-color) 80%, transparent) 0%,
     color-mix(in srgb, var(--overlay-color) 60%, transparent) 25%,
     color-mix(in srgb, var(--overlay-color) 40%, transparent) 45%,
     transparent 80%
   );
+`
+
+export const SCTile = styled.figure.withConfig({
+  shouldForwardProp: (prop) => prop !== 'width' && prop !== 'height',
+})<{ width: number; height: number }>`
+  aspect-ratio: ${({ width, height }) => `${width} / ${height}`};
+  border-radius: ${({ theme }) => theme.radius.surface};
+  display: flex;
+  overflow: hidden;
+  position: relative;
+
+  &:hover ${SCActionContainer}, &:focus-within ${SCActionContainer} {
+    margin-bottom: 0;
+    opacity: 1;
+    visibility: visible;
+  }
 `

@@ -42,9 +42,14 @@ export const SCDialog = styled.div<{ $maxWidth?: string }>`
 
 export interface DSModalContentProps extends PropsWithChildren {
   maxWidth?: string
+  ariaLabel?: string
 }
 
-export const DSModalContent = ({ children, maxWidth }: DSModalContentProps) => {
+export const DSModalContent = ({
+  children,
+  maxWidth,
+  ariaLabel,
+}: DSModalContentProps) => {
   const { isOpen, handleOnClose } = useContext(DSModalContext)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -128,7 +133,7 @@ export const DSModalContent = ({ children, maxWidth }: DSModalContentProps) => {
     <SCModalOverlay
       role="dialog"
       aria-modal="true"
-      aria-label="modal"
+      aria-label={ariaLabel}
       onClick={handleOnClose}
     >
       <SCDialog $maxWidth={maxWidth} ref={containerRef}>
