@@ -1,8 +1,11 @@
 const typography = {
   fontSize: {
-    small: '12px',
-    medium: '16px',
-    large: '24px',
+    xs: '12px',
+    sm: '14px',
+    md: '16px',
+    lg: '24px',
+    xl: '32px',
+    xxl: '40px',
   },
   fontWeight: {
     regular: 400,

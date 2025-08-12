@@ -7,4 +7,5 @@ export interface DSIconProps extends SVGAttributes<SVGSVGElement> {
   name: IconName
   size?: number | string
   ariaLabel?: string
+  color?: string
 }
