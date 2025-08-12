@@ -12,23 +12,32 @@ const StyledImage = styled.img.withConfig({
 export const DSImage = ({
   alt = '',
   borderRadius,
+  fetchPriority,
   height,
-  src,
-  width,
-  onLoad,
   isLoaded,
+  loading = 'lazy',
+  onLoad,
+  sizes,
+  src,
+  srcSet,
+  width,
+  ...rest
 }: DSImageProps) => {
   return (
     <StyledImage
       alt={alt}
       borderRadius={borderRadius}
-      decoding="async"
+      decoding="auto"
       height={height}
-      loading="lazy"
+      loading={loading}
       src={src}
+      srcSet={srcSet}
+      sizes={sizes}
       width={width}
+      fetchPriority={fetchPriority}
       onLoad={onLoad}
       isLoaded={isLoaded}
+      {...rest}
     />
   )
 }
