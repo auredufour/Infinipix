@@ -8,32 +8,29 @@ const SCDynamicIcon = styled(DynamicIcon)<{
   $iconColor?: keyof AppTheme['colors']
 }>`
   ${({ $iconColor, theme }) =>
-    $iconColor && `color: ${theme.colors[$iconColor]};`}
+    $iconColor ? `color: ${theme.colors[$iconColor]};` : 'color: currentColor;'}
 `
 
 export const DSIcon = ({
-  name,
-  size = 24,
   ariaLabel,
   color,
+  name,
+  size = 'medium',
   ...props
 }: DSIconProps) => {
-  const label =
-    ariaLabel ??
-    ((props as Record<string, unknown>)['aria-label'] as string | undefined)
-  const accessibilityProps = label
-    ? { role: 'img', 'aria-label': label, 'aria-hidden': false }
-    : { 'aria-hidden': true }
+  const accessibilityProps = ariaLabel
+    ? { role: 'img', 'aria-label': ariaLabel }
+    : { role: 'presentation' }
 
   return (
     <SCDynamicIcon
+      height={size}
       name={name}
       width={size}
-      height={size}
       // @ts-expect-error - color is not a valid prop for DynamicIcon
       $iconColor={color}
-      {...props}
       {...accessibilityProps}
+      {...props}
     />
   )
 }
