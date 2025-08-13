@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo, useCallback } from 'react'
 
 import { DSModalProvider } from './modal.context'
 import { DSModalContent } from './subcomponents/modal.content.component'
@@ -11,19 +11,23 @@ export interface DSModalRootProps {
   state?: 'active' | 'inactive'
 }
 
-export const DSModalRoot = ({ children, onClose, state }: DSModalRootProps) => {
-  const isOpen = state === 'active'
+export const DSModalRoot = memo(
+  ({ children, onClose, state }: DSModalRootProps) => {
+    const isOpen = state === 'active'
 
-  const handleOnClose = () => {
-    onClose?.()
-  }
+    const handleOnClose = useCallback(() => {
+      onClose?.()
+    }, [onClose])
 
-  return (
-    <DSModalProvider isOpen={isOpen} handleOnClose={handleOnClose}>
-      {children}
-    </DSModalProvider>
-  )
-}
+    return (
+      <DSModalProvider isOpen={isOpen} handleOnClose={handleOnClose}>
+        {children}
+      </DSModalProvider>
+    )
+  },
+)
+
+DSModalRoot.displayName = 'DSModalRoot'
 
 export const DSModal = Object.assign(DSModalRoot, {
   Trigger: DSModalTrigger,

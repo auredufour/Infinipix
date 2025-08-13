@@ -6,14 +6,14 @@ import type { DSTextProps } from './text.types'
 const getColor = (theme: AppTheme, color?: keyof AppTheme['colors']) => {
   return color && Object.prototype.hasOwnProperty.call(theme.colors, color)
     ? theme.colors[color as keyof typeof theme.colors]
-    : theme.colors['strong-fg']
+    : theme.colors['emphasis-low-fg']
 }
 
 const getSize = (theme: AppTheme, size?: keyof AppTheme['fontSize']) => {
   const sizeMap = theme?.fontSize
   return size && size in sizeMap
     ? sizeMap[size as keyof typeof sizeMap]
-    : sizeMap.medium
+    : sizeMap.body
 }
 
 const getWeight = (theme: AppTheme, weight?: keyof AppTheme['fontWeight']) => {

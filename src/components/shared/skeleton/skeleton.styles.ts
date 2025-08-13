@@ -20,7 +20,7 @@ export const SCSkeletonLoader = styled.div<{
   opacity: ${({ $state }) => ($state === 'inactive' ? 0 : 1)};
   position: absolute;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: ${({ theme }) => theme.motions['transition-slow']};
   z-index: 1;
   overflow: hidden;
 

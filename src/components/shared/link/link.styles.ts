@@ -5,7 +5,7 @@ import type { DSLinkProps } from './link.types'
 
 export const SCLink = styled.a<{ $variant: DSLinkProps['variant'] }>`
   ${({ theme }) => `
-    --link-color: ${theme.colors['emphasis-high-fg']};`}
+    --link-color: ${theme.colors['emphasis-low-fg']};`}
 
   border-radius: ${({ theme }) => theme.radius.full};
   color: var(--link-color);
@@ -17,7 +17,7 @@ export const SCLink = styled.a<{ $variant: DSLinkProps['variant'] }>`
 
   &:hover,
   &:focus-visible {
-    background-color: ${({ theme }) => theme.colors['emphasis-high-bg-active']};
+    background-color: ${({ theme }) => theme.colors['emphasis-low-bg-active']};
   }
 
   ${buttonFocusVisible}

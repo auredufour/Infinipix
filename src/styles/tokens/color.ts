@@ -80,17 +80,17 @@ const PRIMARY_PALETTE_LIGHT = {
   'app-bg': SLATE[50],
   'surface-bg': WHITE,
 
-  'emphasis-high-fg': SLATE[900],
-  'emphasis-high-fg-inverted': SLATE[50],
-  'emphasis-high-bg': SLATE[100],
-  'emphasis-high-bg-active': SLATE[200],
+  'emphasis-high-fg': SLATE[50],
+  'emphasis-high-fg-inverted': SLATE[900],
+  'emphasis-high-bg': SLATE[900],
+  'emphasis-high-bg-active': SLATE[800],
 
-  'emphasis-medium-fg': SLATE[600],
+  'emphasis-medium-fg': SLATE[900],
   'emphasis-medium-fg-inverted': SLATE[50],
   'emphasis-medium-bg': SLATE[200],
   'emphasis-medium-bg-active': SLATE[300],
 
-  'emphasis-low-fg': SLATE[400],
+  'emphasis-low-fg': SLATE[900],
   'emphasis-low-fg-inverted': SLATE[50],
   'emphasis-low-bg': SLATE[100],
   'emphasis-low-bg-active': SLATE[200],
