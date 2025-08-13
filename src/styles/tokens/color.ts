@@ -39,7 +39,7 @@ export const PRIMITIVES = {
 // SEMANTIC TOKENS
 // =============================================================================
 
-const LIGHT_TOKENS = {
+const PRIMARY_PALETTE_LIGHT = {
   'app-bg': SLATE[50],
   'surface-bg': SLATE[50], // Changed from white to use primitive
 
@@ -70,7 +70,7 @@ const LIGHT_TOKENS = {
 /**
  * Dark theme semantic tokens
  */
-const DARK_TOKENS = {
+const PRIMARY_PALETTE_DARK = {
   'app-bg': SLATE[900],
   'surface-bg': SLATE[800],
 
@@ -99,9 +99,9 @@ const DARK_TOKENS = {
 } as const
 
 export const color = {
-  light: LIGHT_TOKENS,
-  dark: DARK_TOKENS,
+  light: PRIMARY_PALETTE_LIGHT,
+  dark: PRIMARY_PALETTE_DARK,
 } as const
 
-export type SemanticToken = keyof typeof LIGHT_TOKENS
+export type SemanticToken = keyof typeof PRIMARY_PALETTE_LIGHT
 export type ColorTheme = 'light' | 'dark'
