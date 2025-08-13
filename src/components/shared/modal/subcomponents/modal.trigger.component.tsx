@@ -5,14 +5,7 @@ import { DSModalContext } from '../modal.context'
 
 type DSModalTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
-const SCModalTrigger = styled.button`
-  &:focus {
-    outline: 2px solid ${({ theme }) => theme.colors['app-bg']};
-    border-radius: ${({ theme }) => theme.radius.surface};
-    outline-offset: ${({ theme }) =>
-      `calc(-${theme.spacings['element-gap-md']} / 2)`};
-  }
-`
+const SCModalTrigger = styled.button``
 
 export const DSModalTrigger = memo(
   ({ onClick, ...props }: DSModalTriggerProps) => {

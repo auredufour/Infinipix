@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import { memo } from 'react'
 
 import { DSImage } from '../../../../../components/shared/image/image.component'
 import { DSSkeleton } from '../../../../../components/shared/skeleton/skeleton.component'

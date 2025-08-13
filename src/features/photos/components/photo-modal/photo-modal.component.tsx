@@ -16,7 +16,7 @@ export const PhotoModal = ({
       <SCContentWrapper>
         <PhotoModalHeader author={photo.author} onDownload={onDownload} />
         <PhotoModalImage photo={photo} />
-        <PhotoModalFooter />
+        <PhotoModalFooter onDownload={onDownload} />
       </SCContentWrapper>
     </DSModal.Content>
   </DSModal>

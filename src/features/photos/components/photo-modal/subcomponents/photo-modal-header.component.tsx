@@ -2,9 +2,13 @@ import { memo } from 'react'
 
 import { DSAvatar } from '../../../../../components/shared/avatar/avatar.component'
 import { DSButton } from '../../../../../components/shared/button/button.component'
-import { DSIcon } from '../../../../../components/shared/icon/icon.component'
 import { DSModal } from '../../../../../components/shared/modal/modal.component'
-import { SCAuthorInfo, SCButtonGroup, SCHeaderBar } from '../photo-modal.styles'
+import { DSText } from '../../../../../components/shared/text/text.component'
+import {
+  SCAuthorInfo,
+  SCButtonGroupHeader,
+  SCHeaderBar,
+} from '../photo-modal.styles'
 import type { PhotoModalHeaderProps } from '../photo-modal.types'
 
 export const PhotoModalHeader = memo(
@@ -13,20 +17,16 @@ export const PhotoModalHeader = memo(
       <SCHeaderBar>
         <SCAuthorInfo>
           <DSAvatar name={author} size="medium" />
-          <h2>{author}</h2>
+          <DSText as="h2" size="heading">
+            {author}
+          </DSText>
         </SCAuthorInfo>
 
-        <SCButtonGroup>
-          <DSButton accessoryLeft={<DSIcon name="save" />} variant="low">
-            Save
-          </DSButton>
-          <DSButton accessoryLeft={<DSIcon name="heart" />} variant="low">
-            Love
-          </DSButton>
+        <SCButtonGroupHeader>
           <DSButton variant="highlight" onClick={onDownload}>
             Download
           </DSButton>
-        </SCButtonGroup>
+        </SCButtonGroupHeader>
       </SCHeaderBar>
     </DSModal.Header>
   ),

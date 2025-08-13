@@ -1,13 +1,23 @@
-import { Body } from './components/layout/body/body.component'
-import { Header } from './components/layout/header/header.component'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+
+import { Layout } from './components/layout'
+import { HomePage } from './features/photos/pages'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+    ],
+  },
+])
 
 function App() {
-  return (
-    <div>
-      <Header />
-      <Body />
-    </div>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App

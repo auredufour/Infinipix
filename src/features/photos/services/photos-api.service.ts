@@ -6,9 +6,5 @@ export async function fetchPhotoListResponse({
   page = 1,
   limit = 30,
 }: PaginationParams): Promise<Response> {
-  const url = `${BASE}/v2/list?page=${page}&limit=${limit}`
-
-  const response = await fetch(url)
-
-  return response
+  return fetch(`${BASE}/v2/list?page=${page}&limit=${limit}`)
 }

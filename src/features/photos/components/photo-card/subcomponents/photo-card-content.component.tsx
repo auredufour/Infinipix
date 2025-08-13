@@ -1,11 +1,15 @@
 import { memo, useCallback, useMemo } from 'react'
 
-import { DSButton } from '../../../../../components/shared/button/button.component'
 import { DSImage } from '../../../../../components/shared/image/image.component'
 import { DSText } from '../../../../../components/shared/text/text.component'
 import { useDownloadHandler } from '../photo-card.hooks'
-import { SCActionContainer, SCTile, SCTileTrigger } from '../photo-card.styles'
-import type { PhotoTileProps } from '../photo-card.types'
+import {
+  SCActionContainer,
+  SCButtonDownload,
+  SCCard,
+  SCModalTrigger,
+} from '../photo-card.styles'
+import type { PhotoCardProps } from '../photo-card.types'
 import { getImageSrc, getSrcSet } from '../photo-card.utils'
 
 export const PhotoCardContent = memo(
@@ -19,7 +23,7 @@ export const PhotoCardContent = memo(
     onLoad,
     onOpen,
     width,
-  }: PhotoTileProps) => {
+  }: PhotoCardProps) => {
     const handleOnDownload = useDownloadHandler(downloadUrl, author)
     const handleOnClick = useCallback(onOpen, [onOpen])
 
@@ -38,8 +42,8 @@ export const PhotoCardContent = memo(
     )
 
     return (
-      <SCTile width={width} height={height}>
-        <SCTileTrigger
+      <SCCard width={width} height={height}>
+        <SCModalTrigger
           type="button"
           onClick={handleOnClick}
           aria-label={`Open preview: ${alt}`}
@@ -55,17 +59,17 @@ export const PhotoCardContent = memo(
             srcSet={imageSrcSet}
             width={columnWidth}
           />
-        </SCTileTrigger>
+        </SCModalTrigger>
 
         <SCActionContainer>
           <DSText color="emphasis-high-fg" size="md" weight="bold">
             {author}
           </DSText>
-          <DSButton variant="highlight" onClick={handleOnDownload}>
+          <SCButtonDownload variant="highlight" onClick={handleOnDownload}>
             Download
-          </DSButton>
+          </SCButtonDownload>
         </SCActionContainer>
-      </SCTile>
+      </SCCard>
     )
   },
 )

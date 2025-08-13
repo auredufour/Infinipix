@@ -4,9 +4,9 @@ import type { AppTheme } from '../../../styles/themes/types'
 import type { DSAvatarProps } from './avatar.types'
 
 const SIZE_MAP = {
-  small: (theme: AppTheme) => theme.spacings['16'],
-  medium: (theme: AppTheme) => theme.spacings['24'],
-  large: (theme: AppTheme) => theme.spacings['32'],
+  small: (theme: AppTheme) => theme.spacings['24'],
+  medium: (theme: AppTheme) => theme.spacings['32'],
+  large: (theme: AppTheme) => theme.spacings['48'],
 } as const
 
 const getSize = (size: DSAvatarProps['size'] = 'medium', theme: AppTheme) =>

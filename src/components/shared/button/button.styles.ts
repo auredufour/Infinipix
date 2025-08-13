@@ -1,5 +1,6 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 
+import { interactiveElementStyles } from '../../../shared/utils'
 import type { AppTheme } from '../../../styles/themes/types'
 import type { DSButtonProps } from './button.types'
 
@@ -65,31 +66,16 @@ const getBorderColor = (
   variant: StyledProps['$variant'] = 'plain',
 ) => BORDER_COLOR_MAP[variant || 'plain'](theme)
 
-export const buttonHover = css`
-  &:hover {
-    background-color: var(--colorBgActive);
-  }
-`
 const getOutlineColor = (
   theme: AppTheme,
   variant: StyledProps['$variant'] = 'plain',
 ) => OUTLINE_COLOR_MAP[variant || 'plain'](theme)
 
-export const buttonFocusVisible = css`
-  &:focus-visible {
-    background-color: var(--colorBgActive);
-    outline-offset: 2px;
-    outline: 2px solid var(--colorOutline);
-  }
-`
-
 export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
   ${({ theme, $variant }) => `
   --colorBg: ${getBackgroundColor(theme, $variant)};
-  --colorBgActive: ${getActiveColor(theme, $variant)};
   --colorFg: ${getColor(theme, $variant)};
   --colorBorder: ${getBorderColor(theme, $variant)};
-  --colorOutline: ${getOutlineColor(theme, $variant)};
 `}
 
   align-items: center;
@@ -107,6 +93,9 @@ export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
       : `${theme.spacings['12']} ${theme.spacings['24']}`};
   transition: ${({ theme }) => theme.motions['transition-base']};
 
-  ${buttonHover}
-  ${buttonFocusVisible}
+  ${({ theme, $variant }) =>
+    interactiveElementStyles({
+      colorBg: getActiveColor(theme, $variant),
+      colorOutline: getOutlineColor(theme, $variant),
+    })}
 `

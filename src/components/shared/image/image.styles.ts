@@ -9,8 +9,10 @@ export const SCImageContainer = styled.div<{
   border-radius: ${({ $borderRadius }) =>
     $borderRadius ? `${$borderRadius}px` : '0'};
   display: block;
+  height: 100%;
   overflow: hidden;
   position: relative;
+  width: 100%;
 
   ${({ $aspectRatio }) => $aspectRatio && `aspect-ratio: ${$aspectRatio};`}
 `
@@ -29,9 +31,6 @@ export const SCImage = styled.img<{
 
   opacity: ${({ $isLoaded }) => ($isLoaded ? 1 : 0)};
   transition: opacity 0.3s ease-out;
-
-  ${({ $aspectRatio }) =>
-    $aspectRatio && `position: absolute; top: 0; left: 0;`}
 `
 
 export const SCErrorFallback = styled.div`

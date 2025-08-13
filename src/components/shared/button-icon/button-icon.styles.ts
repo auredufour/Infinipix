@@ -1,9 +1,8 @@
 import styled from 'styled-components'
 
+import { interactiveElementStyles } from '../../../shared/utils'
 import type { AppTheme } from '../../../styles/themes/types'
 import {
-  buttonFocusVisible,
-  buttonHover,
   getActiveColor,
   getBackgroundColor,
   getColor,
@@ -29,7 +28,6 @@ export const SCButtonIcon = styled.button<{
 }>`
   ${({ theme, $variant, $size }) => `
   --colorBg: ${getBackgroundColor(theme, $variant)};
-  --colorBgActive: ${getActiveColor(theme, $variant)};
   --colorFg: ${getColor(theme, $variant)};
   --size: ${getSize($size, theme)};
   `}
@@ -52,6 +50,9 @@ export const SCButtonIcon = styled.button<{
     color: var(--colorFg);
   }
 
-  ${buttonHover}
-  ${buttonFocusVisible}
+  ${({ theme, $variant }) =>
+    interactiveElementStyles({
+      colorBg: getActiveColor(theme, $variant),
+      colorOutline: theme.colors['emphasis-low-fg'],
+    })}
 `

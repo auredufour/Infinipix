@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react'
 import { DSSkeleton } from '../../../../components/shared/skeleton/skeleton.component'
 import { PhotoModal } from '../photo-modal/photo-modal.component'
 import { useDownloadHandler, useIntersectionObserver } from './photo-card.hooks'
-import { SCImageContainer } from './photo-card.styles'
+import { SCCardContainer } from './photo-card.styles'
 import type { PhotoCardComponentProps } from './photo-card.types'
 import { PhotoCardContent } from './subcomponents/photo-card-content.component'
 
@@ -43,7 +43,7 @@ export const PhotoCard = ({
 
   return (
     <>
-      <SCImageContainer
+      <SCCardContainer
         height={displayHeight}
         key={id}
         ref={imgRef}
@@ -66,7 +66,7 @@ export const PhotoCard = ({
             {...props}
           />
         )}
-      </SCImageContainer>
+      </SCCardContainer>
 
       {isModalOpen && (
         <PhotoModal
