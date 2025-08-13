@@ -2,6 +2,7 @@ export const radius = {
   sm: '6px',
   md: '8px',
   lg: '12px',
+  xl: '20px',
   full: '9999px',
 
   interactive: '6px', // Buttons, links, inputs - most clickable things
