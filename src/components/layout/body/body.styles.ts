@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export { visuallyHiddenCssRules } from '../../../shared/utils'
+export { visuallyHiddenCssRules } from '../../../shared/utils/style.utils'
 
 export const SCBodyContainer = styled.main`
   --header-height: 80px;

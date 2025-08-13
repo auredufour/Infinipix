@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { interactiveElementFocusVisible } from '../../../shared/utils'
+import { interactiveElementFocusVisible } from '../../../shared/utils/style.utils'
 import type { DSLinkProps } from './link.types'
 
 export const SCLink = styled.a<{ $variant: DSLinkProps['variant'] }>`

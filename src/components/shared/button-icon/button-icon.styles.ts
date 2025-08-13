@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { interactiveElementStyles } from '../../../shared/utils'
+import { interactiveElementStyles } from '../../../shared/utils/style.utils'
 import type { AppTheme } from '../../../styles/themes/types'
 import {
   getActiveColor,
