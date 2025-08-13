@@ -4,5 +4,5 @@ export interface DSButtonProps
   extends PropsWithChildren<ButtonHTMLAttributes<HTMLButtonElement>> {
   accessoryLeft?: React.ReactNode
   accessoryRight?: React.ReactNode
-  variant?: 'plain' | 'high-emphasis' | 'low-emphasis'
+  variant?: 'plain' | 'high' | 'medium' | 'low' | 'highlight'
 }
