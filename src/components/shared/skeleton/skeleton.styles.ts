@@ -4,39 +4,42 @@ import type { DSSkeletonProps } from './skeleton.types'
 
 const shimmer = keyframes`
   0% {
-    transform: translateX(-100%);
+    transform: translate3d(-100%, 0, 0);
   }
   100% {
-    transform: translateX(100%);
+    transform: translate3d(100%, 0, 0);
   }
 `
 
 export const SCSkeletonLoader = styled.div<{
+  $height?: DSSkeletonProps['height']
   $state: DSSkeletonProps['state']
+  $width?: DSSkeletonProps['width']
 }>`
+  ${({ $height }) =>
+    $height &&
+    `height: ${typeof $height === 'number' ? `${$height}px` : $height};`}
+  ${({ $width }) =>
+    $width && `width: ${typeof $width === 'number' ? `${$width}px` : $width};`}
   background: ${({ theme }) => theme.colors['surface-bg']};
-  border-radius: inherit;
   inset: 0;
-  opacity: ${({ $state }) => ($state === 'inactive' ? 0 : 1)};
-  position: absolute;
-  pointer-events: none;
-  transition: ${({ theme }) => theme.motions['transition-slow']};
-  z-index: 1;
+  opacity: ${({ $state }) => ($state === 'loading' ? 1 : 0)};
   overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  transform: translateZ(0);
+  transition: opacity 0.3s ease-out;
+  will-change: opacity;
+  z-index: 1;
 
   &::before {
     content: '';
-    animation: ${({ $state }) =>
-      $state === 'loading'
-        ? css`
-            ${shimmer} 2.5s ease-in-out infinite
-          `
-        : 0};
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+
     background: linear-gradient(
       90deg,
       transparent 0%,
@@ -61,11 +64,21 @@ export const SCSkeletonLoader = styled.div<{
       transparent 100%
     );
     opacity: 0.75;
+
+    animation: ${({ $state }) =>
+      $state === 'loading'
+        ? css`
+            ${shimmer} 2s ease-in-out infinite
+          `
+        : 0};
+
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   @media (prefers-reduced-motion: reduce) {
     &::before {
-      animation: 0;
+      animation: none;
     }
   }
 `
