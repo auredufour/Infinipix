@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react'
+import React, { memo, useCallback, useEffect, useRef } from 'react'
 
 import { DSModalProvider } from './modal.context'
 import { DSModalContent } from './subcomponents/modal.content.component'
@@ -14,8 +14,24 @@ export interface DSModalRootProps {
 export const DSModalRoot = memo(
   ({ children, onClose, state }: DSModalRootProps) => {
     const isOpen = state === 'active'
+    const prevIsOpen = useRef(isOpen)
+    const originalTriggerRef = useRef<HTMLElement | null>(null)
+
+    useEffect(() => {
+      if (!prevIsOpen.current && isOpen) {
+        originalTriggerRef.current = document.activeElement as HTMLElement
+      }
+
+      prevIsOpen.current = isOpen
+    }, [isOpen])
 
     const handleOnClose = useCallback(() => {
+      if (originalTriggerRef.current) {
+        requestAnimationFrame(() => {
+          originalTriggerRef.current?.focus()
+        })
+      }
+
       onClose?.()
     }, [onClose])
 

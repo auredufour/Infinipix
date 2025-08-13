@@ -14,7 +14,7 @@ const BACKGROUND_COLOR_MAP = {
 } as const
 
 const COLOR_MAP = {
-  plain: (theme: AppTheme) => theme.colors['emphasis-medium-fg'],
+  plain: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
   low: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
   medium: (theme: AppTheme) => theme.colors['emphasis-medium-fg'],
   high: (theme: AppTheme) => theme.colors['emphasis-high-fg'],
@@ -35,6 +35,14 @@ const BORDER_COLOR_MAP = {
   medium: (theme: AppTheme) => theme.colors['emphasis-medium-bg'],
   high: (theme: AppTheme) => theme.colors['emphasis-high-bg'],
   highlight: (theme: AppTheme) => theme.colors['highlight-bg'],
+} as const
+
+const OUTLINE_COLOR_MAP = {
+  plain: () => 'transparent',
+  low: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  medium: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  high: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  highlight: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
 } as const
 
 export const getBackgroundColor = (
@@ -62,12 +70,16 @@ export const buttonHover = css`
     background-color: var(--colorBgActive);
   }
 `
+const getOutlineColor = (
+  theme: AppTheme,
+  variant: StyledProps['$variant'] = 'plain',
+) => OUTLINE_COLOR_MAP[variant || 'plain'](theme)
 
 export const buttonFocusVisible = css`
   &:focus-visible {
     background-color: var(--colorBgActive);
     outline-offset: 2px;
-    outline: 2px solid var(--colorFg);
+    outline: 2px solid var(--colorOutline);
   }
 `
 
@@ -77,6 +89,7 @@ export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
   --colorBgActive: ${getActiveColor(theme, $variant)};
   --colorFg: ${getColor(theme, $variant)};
   --colorBorder: ${getBorderColor(theme, $variant)};
+  --colorOutline: ${getOutlineColor(theme, $variant)};
 `}
 
   align-items: center;

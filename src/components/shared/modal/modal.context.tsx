@@ -2,7 +2,6 @@ import {
   createContext,
   type PropsWithChildren,
   type RefObject,
-  useEffect,
   useMemo,
   useRef,
 } from 'react'
@@ -30,30 +29,6 @@ export const DSModalProvider = ({
     () => ({ isOpen, handleOnClose, triggerRef }),
     [isOpen, handleOnClose],
   )
-
-  const captureFocusedElement = () => {
-    triggerRef.current = document.activeElement as HTMLButtonElement | null
-  }
-
-  const restoreFocusToTrigger = () => {
-    if (triggerRef.current) {
-      setTimeout(() => {
-        triggerRef.current?.focus()
-      }, 0)
-    }
-  }
-
-  useEffect(() => {
-    if (isOpen) {
-      captureFocusedElement()
-    }
-  }, [isOpen])
-
-  useEffect(() => {
-    if (!isOpen) {
-      restoreFocusToTrigger()
-    }
-  }, [isOpen])
 
   return (
     <DSModalContext.Provider value={value}>{children}</DSModalContext.Provider>
