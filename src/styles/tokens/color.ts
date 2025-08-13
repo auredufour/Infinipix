@@ -1,4 +1,4 @@
-import Color from 'color'
+import { hexToRgba } from '../../shared/utils/color.utils'
 
 // =============================================================================
 // ACCESSIBILITY & CONTRAST VERIFICATION
@@ -101,7 +101,7 @@ const PRIMARY_PALETTE_LIGHT = {
   'highlight-bg-active': EMERALD[700],
 
   outline: SLATE[200],
-  'overlay-bg': Color(SLATE[900]).alpha(0.5).toString(),
+  'overlay-bg': hexToRgba(SLATE[900], 0.5),
 } as const
 
 const PRIMARY_PALETTE_DARK = {
@@ -129,7 +129,7 @@ const PRIMARY_PALETTE_DARK = {
   'highlight-bg-active': EMERALD[700],
 
   outline: SLATE[700],
-  'overlay-bg': Color(SLATE[900]).alpha(0.7).toString(),
+  'overlay-bg': hexToRgba(SLATE[900], 0.7),
 } as const
 
 export const color = {
