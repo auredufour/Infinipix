@@ -1,9 +1,13 @@
 import { css } from 'styled-components'
 
 export const bodyCssRules = css`
-  max-width: 1600px;
-  padding: 0 32px 40px;
-  margin: calc(80px + 32px) auto 0;
+  --header-height: 80px;
+
+  max-width: ${({ theme }) => theme.spacings['content-max-width']};
+  padding: 0 ${({ theme }) => theme.spacings['page-gutter']}
+    ${({ theme }) => theme.spacings['section-gap']};
+  margin: ${({ theme }) =>
+    `calc(var(--header-height) + ${theme.spacings['page-gutter']}) auto 0`};
 `
 
 export const visuallyHiddenCssRules = css`

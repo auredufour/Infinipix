@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { DSButton } from '../../../components/shared/button/button.component'
 import { DSImage } from '../../../components/shared/image/image.component'
@@ -15,7 +15,7 @@ import type {
   PhotoCardComponentProps,
   PhotoTileProps,
 } from './photo-tile.types'
-import { downloadImage } from './photo-tile.utils'
+import { downloadImage, getImageSrc, getSrcSet } from './photo-tile.utils'
 
 /**
  * Hook for lazy loading images using Intersection Observer
@@ -139,7 +139,7 @@ export const PhotoCard = ({
 
       {isModalOpen && (
         <PhotoModal
-          state="active"
+          state={isModalOpen ? 'active' : 'inactive'}
           photo={{
             author,
             id,
@@ -174,8 +174,20 @@ export const PhotoCardContent = memo(
   }: PhotoTileProps) => {
     const handleOnDownload = useDownloadHandler(downloadUrl, author)
     const handleOnClick = useCallback(onOpen, [onOpen])
-    const imageSrc = `${downloadUrl}?w=${Math.round(columnWidth)}&h=${Math.round(columnWidth * (height / width))}`
-    const imageHeight = Math.round(columnWidth * (height / width))
+
+    const aspectRatio = height / width
+    const imageSrc = useMemo(
+      () => getImageSrc(aspectRatio, columnWidth, downloadUrl),
+      [aspectRatio, columnWidth, downloadUrl],
+    )
+    const imageSrcSet = useMemo(
+      () => getSrcSet(downloadUrl, columnWidth, aspectRatio),
+      [downloadUrl, columnWidth, aspectRatio],
+    )
+    const imageHeight = useMemo(
+      () => Math.round(columnWidth * aspectRatio),
+      [columnWidth, aspectRatio],
+    )
 
     return (
       <SCTile width={width} height={height}>
@@ -192,16 +204,16 @@ export const PhotoCardContent = memo(
             onLoad={onLoad}
             sizes={`${columnWidth}px`}
             src={imageSrc}
-            srcSet={`${imageSrc} 1x, ${imageSrc} 2x`}
+            srcSet={imageSrcSet}
             width={columnWidth}
           />
         </SCTileTrigger>
 
         <SCActionContainer>
-          <DSText color="strong-fg-inverted" size="medium" weight="bold">
+          <DSText color="emphasis-high-fg" size="md" weight="bold">
             {author}
           </DSText>
-          <DSButton variant="high-emphasis" onClick={handleOnDownload}>
+          <DSButton variant="highlight" onClick={handleOnDownload}>
             Download
           </DSButton>
         </SCActionContainer>

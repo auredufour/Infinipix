@@ -10,15 +10,19 @@ export const SCTileTrigger = styled(DSModal.Trigger)`
 `
 
 export const SCImageContainer = styled.div<{ width: number; height: number }>`
-  border-radius: ${({ theme }) => theme.radius.surface};
+  border-radius: ${({ theme }) => theme.radius.lg};
   position: relative;
   height: ${({ height }) => height}px;
   overflow: hidden;
-  transition: transform 0.2s ease-out;
+  transition: ${({ theme }) => theme.motions['transition-base']};
   width: ${({ width }) => width}px;
 
   &:hover {
     transform: scale(1.02);
+  }
+
+  @media (reduced-motion: reduce) {
+    transition: none;
   }
 `
 
@@ -32,9 +36,9 @@ export const SCActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
   left: 0;
-  margin-bottom: ${({ theme }) => `-${theme.spacings[12]}`};
+  margin-bottom: ${({ theme }) => `-${theme.spacings['8']}`};
   opacity: 0;
-  padding: ${({ theme }) => theme.spacings[16]};
+  padding: ${({ theme }) => theme.spacings['16']};
   position: absolute;
   right: 0;
   visibility: hidden;

@@ -40,13 +40,13 @@ export function Header() {
         </a>
         <nav aria-label="Primary">
           <StyledList>
-            <li role="none">
-              <DSLink role="menuitem" tabIndex={-1} href="/">
+            <li>
+              <DSLink role="menuitem" href="/">
                 Home
               </DSLink>
             </li>
-            <li role="none">
-              <DSLink role="menuitem" tabIndex={-1} href="/">
+            <li>
+              <DSLink role="menuitem" href="/">
                 About
               </DSLink>
             </li>

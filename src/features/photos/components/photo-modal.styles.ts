@@ -15,12 +15,12 @@ export const SCHeaderBar = styled.div`
 
 export const SCAuthorInfo = styled.div`
   align-items: center;
-  column-gap: ${({ theme }) => theme.spacings[8]};
+  column-gap: ${({ theme }) => theme.spacings['element-gap-sm']};
   display: flex;
 `
 
 export const SCButtonGroup = styled.div`
-  column-gap: ${({ theme }) => theme.spacings[8]};
+  column-gap: ${({ theme }) => theme.spacings['element-gap-sm']};
   display: flex;
 `
 
@@ -38,7 +38,7 @@ export const SCImageWrapper = styled.div<{ $width: number; $height: number }>`
   display: flex;
   height: auto;
   justify-content: center;
-  margin-top: ${({ theme }) => theme.spacings[40]};
+  margin-top: ${({ theme }) => theme.spacings['section-gap']};
   max-height: 100%;
   max-width: 80%;
   position: relative;
@@ -57,24 +57,24 @@ export const SCFooter = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: auto;
-  padding-top: ${({ theme }) => theme.spacings[24]};
+  padding-top: ${({ theme }) => theme.spacings['component-padding-lg']};
 `
 
 export const SCMetaInfo = styled.div`
   align-items: center;
-  color: ${({ theme }) => theme.colors['soft-fg']};
-  column-gap: ${({ theme }) => theme.spacings[16]};
+  color: ${({ theme }) => theme.colors['emphasis-medium-fg']};
+  column-gap: ${({ theme }) => theme.spacings['element-gap-lg']};
   display: flex;
 `
 
 export const SCMetaItem = styled.span`
   align-items: center;
-  column-gap: ${({ theme }) => theme.spacings[4]};
+  column-gap: ${({ theme }) => theme.spacings['element-gap-xs']};
   display: inline-flex;
 `
 
 export const SCFooterActions = styled.div`
-  column-gap: ${({ theme }) => theme.spacings[8]};
+  column-gap: ${({ theme }) => theme.spacings['element-gap-sm']};
   display: flex;
-  padding-top: ${({ theme }) => theme.spacings[16]};
+  padding-top: ${({ theme }) => theme.spacings['element-gap-lg']};
 `

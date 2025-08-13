@@ -96,6 +96,11 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
     margin: 0;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    animation: none;
+  }
+
   @font-face {
     font-family: 'Canva Sans';
     src: url(${CanvaSansRegular}) format('woff2');

@@ -33,7 +33,6 @@ export function Body() {
     <StyledBodyContainer>
       <DSGridMansory
         data={pages.flatMap((p) => p.items)}
-        gap={16}
         renderItem={renderItem}
       />
       <div ref={sentinel} style={{ height: 1 }} />

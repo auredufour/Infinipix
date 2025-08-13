@@ -47,19 +47,13 @@ const PhotoModalHeader = memo(
         </SCAuthorInfo>
 
         <SCButtonGroup>
-          <DSButton
-            accessoryLeft={<DSIcon name="save" />}
-            variant="low-emphasis"
-          >
+          <DSButton accessoryLeft={<DSIcon name="save" />} variant="low">
             Save
           </DSButton>
-          <DSButton
-            accessoryLeft={<DSIcon name="heart" />}
-            variant="low-emphasis"
-          >
+          <DSButton accessoryLeft={<DSIcon name="heart" />} variant="low">
             Love
           </DSButton>
-          <DSButton variant="high-emphasis" onClick={onDownload}>
+          <DSButton variant="highlight" onClick={onDownload}>
             Download
           </DSButton>
         </SCButtonGroup>
@@ -107,21 +101,15 @@ const PhotoModalFooter = memo(() => (
     </SCMetaInfo>
 
     <SCFooterActions>
-      <DSButton
-        accessoryLeft={<DSIcon name="info" size={16} />}
-        variant="low-emphasis"
-      >
+      <DSButton accessoryLeft={<DSIcon name="info" size={16} />} variant="low">
         More information
       </DSButton>
-      <DSButton
-        accessoryLeft={<DSIcon name="share" size={16} />}
-        variant="low-emphasis"
-      >
+      <DSButton accessoryLeft={<DSIcon name="share" size={16} />} variant="low">
         Share
       </DSButton>
       <DSButton
         accessoryLeft={<DSIcon name="flag" size={16} />}
-        variant="low-emphasis"
+        variant="low"
         aria-label="Signaler"
       />
     </SCFooterActions>

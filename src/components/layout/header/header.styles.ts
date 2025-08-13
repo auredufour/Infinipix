@@ -11,14 +11,17 @@ export const headerContainerCssRules = css`
 `
 
 export const headerCssRules = css`
+  --header-height: 80px;
+
   align-items: center;
-  color: ${({ theme }) => theme.colors['strong-fg']};
+  color: ${({ theme }) => theme.colors['emphasis-high-fg']};
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: ${({ theme }) => `${theme.spacings[12]} ${theme.spacings[32]}`};
-  min-height: 80px;
-  max-width: 1600px;
+  padding: ${({ theme }) =>
+    `${theme.spacings['12']} ${theme.spacings['page-gutter']}`};
+  min-height: var(--header-height);
+  max-width: ${({ theme }) => theme.spacings['content-max-width']};
   margin: 0 auto;
 `
 
@@ -28,7 +31,7 @@ export const headerMenuCssRules = css`
   }
 `
 export const headerNavListCssRules = css`
-  column-gap: ${({ theme }) => theme.spacings[16]}px;
+  column-gap: ${({ theme }) => theme.spacings['element-gap-lg']};
   display: flex;
   flex-direction: row;
   list-style: none;
