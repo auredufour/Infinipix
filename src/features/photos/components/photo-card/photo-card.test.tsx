@@ -3,7 +3,7 @@ import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event'
 
 import { renderWithTheme, screen } from '../../../../tests/test-utils'
-import { PhotoCard } from './photo-tile.component'
+import { PhotoCard } from './photo-card/photo-tile.component'
 
 // Mock photo props
 const defaultProps = {
@@ -27,7 +27,7 @@ describe('PhotoCard', () => {
 })
 
 // Test the PhotoCardContent component separately since it's exported
-import { PhotoCardContent } from './photo-tile.component'
+import { PhotoCardContent } from './photo-card/photo-tile.component'
 
 describe('PhotoCardContent', () => {
   const contentProps = {

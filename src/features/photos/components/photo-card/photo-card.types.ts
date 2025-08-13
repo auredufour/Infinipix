@@ -1,4 +1,4 @@
-import type { PhotoCardProps as ImportedPhotoCardProps } from './photo-tile.types'
+import type { PhotoCardProps as ImportedPhotoCardProps } from './photo-card.types'
 
 export type PhotoCardProps = {
   alt?: string

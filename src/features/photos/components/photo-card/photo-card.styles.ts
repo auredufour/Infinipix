@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { DSModal } from '../../../components/shared/modal/modal.component'
+import { DSModal } from '../../../../components/shared/modal/modal.component'
 
 export const SCTileTrigger = styled(DSModal.Trigger)`
   all: unset;
@@ -19,10 +19,6 @@ export const SCImageContainer = styled.div<{ width: number; height: number }>`
 
   &:hover {
     transform: scale(1.02);
-  }
-
-  @media (reduced-motion: reduce) {
-    transition: none;
   }
 `
 
