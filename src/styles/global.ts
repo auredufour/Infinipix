@@ -73,7 +73,7 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
   body {
     font-family: 'Canva Sans','Helvetica Neue', Roboto, -apple-system, blinkmacsystemfont, sans-serifsystem-ui, sans-serif;
     background: ${({ theme }) => theme.colors['app-bg']};
-    color: ${({ theme }) => theme.colors['strong-fg']};
+    color: ${({ theme }) => theme.colors['emphasis-high-fg']};
   }
 
   a {

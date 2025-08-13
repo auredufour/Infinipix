@@ -24,8 +24,10 @@ const getBackgroundColor = (
 ) => {
   const map = {
     plain: 'transparent',
-    'medium-emphasis': theme.colors['soft-bg'],
-    'high-emphasis': theme.colors['highlight-bg'],
+    medium: theme.colors['emphasis-medium-bg'],
+    low: theme.colors['emphasis-low-bg'],
+    high: theme.colors['emphasis-high-bg'],
+    highlight: theme.colors['highlight-bg'],
   } as const
   return map[variant as keyof typeof map]
 }
@@ -35,8 +37,11 @@ const getColor = (
   variant: StyledProps['$variant'] = 'plain',
 ) => {
   const map = {
-    plain: theme.colors['strong-fg'],
-    'high-emphasis': theme.colors['strong-fg-inverted'],
+    plain: theme.colors['emphasis-high-fg'],
+    medium: theme.colors['emphasis-medium-fg'],
+    low: theme.colors['emphasis-low-fg'],
+    high: theme.colors['emphasis-high-fg'],
+    highlight: theme.colors['highlight-fg'],
   } as const
   return map[variant as keyof typeof map]
 }
@@ -72,6 +77,6 @@ export const SCButtonIcon = styled.button<{
 
   &:focus-visible {
     outline-offset: 2px;
-    outline: 2px solid ${({ theme }) => theme.colors['strong-fg']};
+    outline: 2px solid ${({ theme }) => theme.colors['emphasis-high-fg']};
   }
 `

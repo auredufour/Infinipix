@@ -11,8 +11,10 @@ const getBackgroundColor = (
 ) => {
   const map = {
     plain: 'transparent',
-    'low-emphasis': theme.colors['app-bg'],
-    'high-emphasis': theme.colors['highlight-bg'],
+    low: theme.colors['emphasis-low-bg'],
+    medium: theme.colors['emphasis-medium-bg'],
+    high: theme.colors['emphasis-high-bg'],
+    highlight: theme.colors['highlight-bg-active'],
   } as const
 
   return map[variant as keyof typeof map] ?? map.plain
@@ -23,9 +25,11 @@ const getColor = (
   variant: StyledProps['$variant'] = 'plain',
 ) => {
   const map = {
-    plain: theme.colors['strong-fg'],
-    'low-emphasis': theme.colors['strong-fg'],
-    'high-emphasis': theme.colors['strong-fg-inverted'],
+    plain: theme.colors['emphasis-high-fg'],
+    low: theme.colors['emphasis-high-fg'],
+    medium: theme.colors['emphasis-medium-fg'],
+    high: theme.colors['emphasis-high-fg'],
+    highlight: theme.colors['highlight-fg'],
   } as const
 
   return map[variant as keyof typeof map] ?? map.plain
@@ -45,9 +49,9 @@ const getBorderColor = (
 
 export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
   ${({ theme, $variant }) => `
---backgroundColor: ${getBackgroundColor(theme, $variant)};
---borderColor: ${getBorderColor(theme, $variant)};
---color: ${getColor(theme, $variant)};
+  --backgroundColor: ${getBackgroundColor(theme, $variant)};
+  --borderColor: ${getBorderColor(theme, $variant)};
+  --color: ${getColor(theme, $variant)};
 `}
 
   background-color: var(--backgroundColor);
@@ -69,6 +73,6 @@ export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
 
   &:focus-visible {
     outline-offset: 2px;
-    outline: 2px solid ${({ theme }) => theme.colors['strong-fg']};
+    outline: 2px solid ${({ theme }) => theme.colors['emphasis-high-fg']};
   }
 `
