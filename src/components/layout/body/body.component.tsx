@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import { PhotoCard } from '../../../features/photos/components/photo-tile.component'
+import { PhotoCard } from '../../../features/photos/components/photo-card/photo-card.component'
 import type { Photo } from '../../../features/photos/photo.types'
 import { useInfinitePhotos } from '../../../features/photos/usePhoto'
 import { DSGridMansory } from '../../shared/grid/grid.component'

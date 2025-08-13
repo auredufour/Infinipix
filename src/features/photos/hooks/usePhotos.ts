@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 
-import { photosApiService } from '../services/photos-api.service'
-import type { Photo, PhotoParams } from '../types/photo.types'
+import { fetchPaginatedPhotos } from '../photo.data'
+import type { PaginationParams, Photo } from '../photo.types'
 
 interface UsePhotosReturn {
   photos: Photo[]
@@ -12,7 +12,9 @@ interface UsePhotosReturn {
   refresh: () => Promise<void>
 }
 
-export const usePhotos = (initialParams: PhotoParams = {}): UsePhotosReturn => {
+export const usePhotos = (
+  initialParams: PaginationParams = {},
+): UsePhotosReturn => {
   const [photos, setPhotos] = useState<Photo[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -20,21 +22,21 @@ export const usePhotos = (initialParams: PhotoParams = {}): UsePhotosReturn => {
   const [currentPage, setCurrentPage] = useState(1)
 
   const loadPhotos = useCallback(
-    async (params: PhotoParams, append = false) => {
+    async (params: PaginationParams, append = false) => {
       try {
         setLoading(true)
         setError(null)
 
-        const newPhotos = await photosApiService.getPhotos(params)
+        const result = await fetchPaginatedPhotos(params)
 
         if (append) {
-          setPhotos((prev) => [...prev, ...newPhotos])
+          setPhotos((prev) => [...prev, ...result.items])
         } else {
-          setPhotos(newPhotos)
+          setPhotos(result.items)
         }
 
         // If we got less than the limit, we've reached the end
-        if (newPhotos.length < (params.limit || 30)) {
+        if (result.items.length < (params.limit || 30)) {
           setHasMore(false)
         }
       } catch (err) {

@@ -1,5 +1,5 @@
-import { fetchPhotoListResponse } from './photo.api'
 import type { PaginationParams, Photo } from './photo.types'
+import { fetchPhotoListResponse } from './services/photos-api.service'
 
 const listCache = new Map<
   string,
