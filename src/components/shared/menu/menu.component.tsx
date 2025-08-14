@@ -12,15 +12,15 @@ import type {
 
 const StyledButton = styled(DSButton)``
 
-const StyledMenuList = styled.ul`
+const SCMenuList = styled.ul`
   ${menuListCssRules}
 `
 
 const DSMenuList = ({ children, menuId }: DSMenuListProps) => {
   return (
-    <StyledMenuList id={menuId} role="menu" aria-labelledby={menuId}>
+    <SCMenuList id={menuId} role="menu" aria-labelledby={menuId}>
       {children}
-    </StyledMenuList>
+    </SCMenuList>
   )
 }
 

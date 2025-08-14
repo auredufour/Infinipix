@@ -6,7 +6,8 @@ interface BodyProps {
   children: ReactNode
 }
 
-/* ---------- main body ---------- */
-export function Body({ children }: BodyProps) {
+export const Body = ({ children }: BodyProps) => {
   return <SCBodyContainer>{children}</SCBodyContainer>
 }
+
+Body.displayName = 'Body'

@@ -3,19 +3,21 @@ import styled from 'styled-components'
 
 import { Header } from './header/header.component'
 
-const StyledLayoutContainer = styled.div`
+const SCLayoutContainer = styled.div`
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 `
 
-export function Layout() {
+export const Layout = () => {
   return (
-    <StyledLayoutContainer>
+    <SCLayoutContainer>
       <Header />
       <main>
         <Outlet />
       </main>
-    </StyledLayoutContainer>
+    </SCLayoutContainer>
   )
 }
+
+Layout.displayName = 'Layout'

@@ -1,6 +1,6 @@
 import { renderWithTheme, screen } from '../../../../tests/test-utils'
 import { DSText } from '../text/text.component'
-import { DSGridMansory } from './grid.component'
+import { DSGridMasonry } from './grid.component'
 import {
   calculateColumnWidth,
   createEmptyColumns,
@@ -11,7 +11,7 @@ import {
 describe('DSGrid', () => {
   it('renders children', () => {
     renderWithTheme(
-      <DSGridMansory
+      <DSGridMasonry
         data={[{ id: '1', text: 'Hello', width: 100, height: 100 }]}
         renderItem={(item) => <DSText>{item.text}</DSText>}
       />,
