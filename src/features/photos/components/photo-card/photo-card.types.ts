@@ -8,6 +8,7 @@ export type PhotoCardProps = {
   isLoaded: boolean
   onLoad?: () => void
   onOpen: () => void
+  priority?: 'eager' | 'lazy'
   src: string
   width: number
 }
@@ -21,5 +22,6 @@ export interface PhotoCardComponentProps {
   author: string
   downloadUrl: string
   id: string
+  priority?: 'eager' | 'lazy'
   src: string
 }

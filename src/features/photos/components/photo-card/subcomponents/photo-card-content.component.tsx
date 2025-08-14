@@ -22,22 +22,26 @@ export const PhotoCardContent = memo(
     isLoaded,
     onLoad,
     onOpen,
+    priority = 'lazy',
     width,
   }: PhotoCardProps) => {
     const handleOnDownload = useDownloadHandler(downloadUrl, author)
     const handleOnClick = useCallback(onOpen, [onOpen])
 
-    const aspectRatio = height / width
+    const aspectRatio = useMemo(() => height / width, [height, width])
+
     const imageSrc = useMemo(
       () => getImageSrc(aspectRatio, columnWidth, downloadUrl),
       [aspectRatio, columnWidth, downloadUrl],
     )
+
     const imageSrcSet = useMemo(
       () => getSrcSet(downloadUrl, columnWidth, aspectRatio),
       [downloadUrl, columnWidth, aspectRatio],
     )
+
     const imageHeight = useMemo(
-      () => Math.round(columnWidth * aspectRatio),
+      () => columnWidth * aspectRatio,
       [columnWidth, aspectRatio],
     )
 
@@ -53,6 +57,7 @@ export const PhotoCardContent = memo(
             borderRadius={12}
             height={imageHeight}
             isLoaded={isLoaded}
+            loading={priority}
             onLoad={onLoad}
             sizes={`${columnWidth}px`}
             src={imageSrc}

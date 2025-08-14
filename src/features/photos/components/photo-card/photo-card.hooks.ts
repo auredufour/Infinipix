@@ -2,54 +2,68 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { downloadImage } from './photo-card.utils'
 
-/**
- * Hook for lazy loading images using Intersection Observer
- *
- * @param rootMargin - The margin around the root element
- * @param threshold - The threshold for the intersection observer
- * @returns An object containing the ref and isInView state
- */
-export const useImageLazyLoading = (rootMargin = '600px', threshold = 0.1) => {
+const ROOT_MARGIN = '150% 0%'
+
+let sharedObserver: IntersectionObserver | null = null
+const observedElements = new Map<Element, () => void>()
+
+const getSharedObserver = () => {
+  if (!sharedObserver) {
+    sharedObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const callback = observedElements.get(entry.target)
+          if (callback && entry.isIntersecting) {
+            callback()
+          }
+        })
+      },
+      {
+        rootMargin: ROOT_MARGIN,
+        threshold: 0,
+      },
+    )
+  }
+  return sharedObserver
+}
+
+export const useImageLazyLoading = () => {
   const [isInView, setIsInView] = useState(false)
-  const imgRef = useRef(null)
+  const imgRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true)
-          observer.disconnect()
-        }
-      },
-      { rootMargin, threshold },
-    )
+    const element = imgRef.current
 
-    if (imgRef.current) {
-      observer.observe(imgRef.current)
+    if (!element || isInView) return
+
+    const observer = getSharedObserver()
+    const callback = () => {
+      setIsInView(true)
+      observer.unobserve(element)
+      observedElements.delete(element)
     }
 
-    return () => observer.disconnect()
-  }, [rootMargin, threshold])
+    observedElements.set(element, callback)
+    observer.observe(element)
+
+    return () => {
+      observer.unobserve(element)
+      observedElements.delete(element)
+    }
+  }, [isInView])
 
   return { imgRef, isInView }
 }
 
-/**
- * Hook for handling image downloads with error fallback
- *
- * @param downloadUrl - The URL of the image to download
- * @param author - The author of the image
- * @returns A function that handles the download of the image
- */
 export const useDownloadHandler = (downloadUrl: string, author: string) => {
   return useCallback(
-    async (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.preventDefault()
-      e.stopPropagation()
+    async (evt: React.MouseEvent<HTMLButtonElement>) => {
+      evt.preventDefault()
+      evt.stopPropagation()
 
       try {
         await downloadImage(downloadUrl, `infinipix-${author}`)
-      } catch (error: unknown) {
+      } catch {
         window.open(downloadUrl, '_blank', 'noopener')
       }
     },

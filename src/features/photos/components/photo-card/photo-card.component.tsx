@@ -1,4 +1,4 @@
-import { memo, useCallback, useState } from 'react'
+import { memo, useCallback, useMemo, useState } from 'react'
 
 import { DSSkeleton } from '../../../../components/shared/skeleton/skeleton.component'
 import { PhotoModal } from '../photo-modal/photo-modal.component'
@@ -9,21 +9,41 @@ import { PhotoCardContent } from './subcomponents/photo-card-content.component'
 
 export const PhotoCard = memo(
   ({
+    author,
     columnWidth,
     downloadUrl,
     height,
     id,
     onLoad,
+    priority = 'lazy',
     src,
     width,
-    author,
     ...props
   }: PhotoCardComponentProps) => {
-    const [isLoaded, setIsLoaded] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isLoaded, setIsLoaded] = useState(false)
 
     const { imgRef, isInView } = useImageLazyLoading()
     const handleOnDownload = useDownloadHandler(downloadUrl, author)
+
+    const aspectRatio = useMemo(() => height / width, [height, width])
+    const displayHeight = useMemo(
+      () => columnWidth * aspectRatio,
+      [columnWidth, aspectRatio],
+    )
+
+    const photoData = useMemo(
+      () => ({
+        author,
+        id,
+        width,
+        height,
+        download_url: downloadUrl,
+        url: src,
+        ...props,
+      }),
+      [author, id, width, height, downloadUrl, src, props],
+    )
 
     const handleOnImageLoad = useCallback(() => {
       setIsLoaded(true)
@@ -38,9 +58,7 @@ export const PhotoCard = memo(
       setIsModalOpen(false)
     }, [])
 
-    // Calculate aspect ratio for skeleton
-    const aspectRatio = height / width
-    const displayHeight = columnWidth * aspectRatio
+    const shouldRender = priority === 'eager' || isInView
 
     return (
       <>
@@ -52,18 +70,19 @@ export const PhotoCard = memo(
         >
           <DSSkeleton state={isLoaded ? 'inactive' : 'loading'} />
 
-          {isInView && (
+          {shouldRender && (
             <PhotoCardContent
               author={author}
               columnWidth={columnWidth}
+              downloadUrl={downloadUrl}
               height={height}
               id={id}
               isLoaded={isLoaded}
               onLoad={handleOnImageLoad}
               onOpen={handleOnOpenModal}
-              width={width}
-              downloadUrl={downloadUrl}
+              priority={priority}
               src={src}
+              width={width}
               {...props}
             />
           )}
@@ -71,18 +90,10 @@ export const PhotoCard = memo(
 
         {isModalOpen && (
           <PhotoModal
-            state={isModalOpen ? 'active' : 'inactive'}
-            photo={{
-              author,
-              id,
-              width,
-              height,
-              download_url: downloadUrl,
-              url: src,
-              ...props,
-            }}
             onClose={handleOnCloseModal}
             onDownload={handleOnDownload}
+            photo={photoData}
+            state={isModalOpen ? 'active' : 'inactive'}
           />
         )}
       </>
