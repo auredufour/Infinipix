@@ -9,7 +9,7 @@ import CanvaSansRegularItalic from '../fonts/canva-sans/CanvaSans-RegularItalic.
 import type { AppTheme } from './themes/types'
 
 export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
-  /* Critical font preloading - load most important font first */
+  /* font preloading - load most important font first */
   @font-face {
     font-family: 'Canva Sans';
     src: url(${CanvaSansRegular}) format('woff2');
@@ -54,7 +54,6 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
     font-display: swap;
   }
 
-  /* Critical CSS first - minimize render blocking */
   *, *::before, *::after {
     box-sizing: border-box;
   }

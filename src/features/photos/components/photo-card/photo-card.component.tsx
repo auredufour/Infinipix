@@ -68,7 +68,10 @@ export const PhotoCard = memo(
           ref={imgRef}
           width={columnWidth}
         >
-          <DSSkeleton state={isLoaded ? 'inactive' : 'loading'} />
+          <DSSkeleton
+            state={isLoaded ? 'inactive' : 'loading'}
+            height={displayHeight}
+          />
 
           {shouldRender && (
             <PhotoCardContent

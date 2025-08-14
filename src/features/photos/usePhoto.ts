@@ -11,6 +11,8 @@ import type {
 
 type AsyncStatus = 'loading' | 'success' | 'error' | null
 
+export type InfinitePhotoPage = { items: Photo[]; next?: number }
+
 interface AsyncState<T> {
   data: T | null
   error: Error | null
@@ -19,21 +21,12 @@ interface AsyncState<T> {
 
 const LINK_REGEX = /<[^>]*[?&]page=(\d+)[^>]*>\s*;\s*rel="(\w+)"/g
 
-/**
- * Creates an initial state for an asynchronous operation.
- *
- * @param T - The type of data to store in the state.
- * @returns An AsyncState object with the initial state.
- */
 function createInitialState<T>(): AsyncState<T> {
   return { status: null, data: null, error: null }
 }
 
 /**
  * Parses a link header and extracts pagination links.
- *
- * @param header - The link header to parse.
- * @returns An object containing the pagination links.
  */
 function parseLinkHeader(header: string | null): PaginationLinks {
   if (!header) {
@@ -57,9 +50,6 @@ function getNextPage(header: string | null): number | undefined {
   const match = nextPart.match(/[?&]page=(\d+)/)
   return match ? Number(match[1]) : undefined
 }
-
-// New page definition for the infinite-scroll hook
-export type InfinitePhotoPage = { items: Photo[]; next?: number }
 
 /**
  * Keeps a rootMargin string in sync with the current viewport height.
@@ -104,15 +94,18 @@ function useIntersectionObserver(
   }, [targetRef, callback, rootMargin, threshold])
 }
 
-/** Deduplicate photo items across pages before appending */
 function appendUniquePhotos(
   prev: InfinitePhotoPage[],
   items: Photo[],
   next?: number,
 ): InfinitePhotoPage[] {
-  const seen = new Set(prev.flatMap((p) => p.items.map((i) => i.id)))
-  const unique = items.filter((i) => !seen.has(i.id))
-  return [...prev, { items: unique, next }]
+  const lastPage = prev[prev.length - 1]
+  const lastPageIds = lastPage
+    ? new Set(lastPage.items.map((i) => i.id))
+    : new Set()
+  const uniqueItems = items.filter((i) => !lastPageIds.has(i.id))
+
+  return [...prev, { items: uniqueItems, next }]
 }
 
 /**
@@ -203,8 +196,9 @@ export function useInfinitePhotos(limit = 30) {
 
   /** Callback fired by the IntersectionObserver */
   const handleIntersection = useCallback<IntersectionObserverCallback>(
-    ([entry]) => {
-      if (entry.isIntersecting) {
+    (entries) => {
+      const entry = entries[0]
+      if (entry && entry.isIntersecting) {
         fetchNextPage()
       }
     },
