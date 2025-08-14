@@ -3,6 +3,8 @@
 A photo gallery application built with React and TypeScript, implementing
 infinite scroll and masonry grid layout.
 
+You can see it live at [https://infinipix.netlify.app/](https://infinipix.netlify.app/)
+
 ## Features
 
 ### Core Functionality
