@@ -1,7 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 
-import { Body } from './body/body.component'
 import { Header } from './header/header.component'
 
 const SCLayoutContainer = styled.div`
@@ -14,9 +13,9 @@ export const Layout = () => {
   return (
     <SCLayoutContainer>
       <Header />
-      <Body>
+      <main>
         <Outlet />
-      </Body>
+      </main>
     </SCLayoutContainer>
   )
 }

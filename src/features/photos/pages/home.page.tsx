@@ -11,6 +11,14 @@ const SCHeader = styled.h1`
   ${visuallyHiddenCssRules}
 `
 
+const SCHomePageContainer = styled.div`
+  --header-height: 80px;
+
+  max-width: ${({ theme }) => theme.spacings['content-max-width']};
+  padding: var(--page-gutter);
+  margin: var(--header-height) auto 0;
+`
+
 export const HomePage = () => {
   const { pages, sentinel } = useInfinitePhotos(30)
 
@@ -36,11 +44,11 @@ export const HomePage = () => {
   )
 
   return (
-    <div>
+    <SCHomePageContainer>
       <SCHeader as="h1">Gallery of Images</SCHeader>
       <DSGridMasonry data={allPhotos} renderItem={renderItem} />
       <div role="none" ref={sentinel} style={{ height: 1 }} />
-    </div>
+    </SCHomePageContainer>
   )
 }
 
