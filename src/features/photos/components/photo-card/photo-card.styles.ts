@@ -19,7 +19,8 @@ export const SCCardContainer = styled.div<{ width: number; height: number }>`
     transform: scale(1.02);
   }
 
-  &:focus-within img {
+  &:focus-visible img,
+  button:focus-visible img {
     outline: 2px solid ${({ theme }) => theme.colors['emphasis-high-fg']};
     outline-style: solid;
     outline-offset: -10px;

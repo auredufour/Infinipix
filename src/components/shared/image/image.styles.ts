@@ -30,7 +30,7 @@ export const SCImage = styled.img<{
   width: 100%;
 
   opacity: ${({ $isLoaded }) => ($isLoaded ? 1 : 0)};
-  transition: opacity 0.3s ease-out;
+  transition: opacity 0.5s ease-out;
 `
 
 export const SCErrorFallback = styled.div`

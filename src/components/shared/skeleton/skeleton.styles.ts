@@ -7,32 +7,30 @@ export const SCSkeletonLoader = styled.div<{
   $state: DSSkeletonProps['state']
   $width?: DSSkeletonProps['width']
 }>`
-  height: ${({ $height }) =>
-    $height
-      ? typeof $height === 'number'
-        ? `${$height}px`
-        : $height
-      : '100%'};
-  width: ${({ $width }) =>
-    $width ? (typeof $width === 'number' ? `${$width}px` : $width) : '100%'};
-
-  background: linear-gradient(
-    135deg,
-    ${({ theme }) => theme.colors['surface-bg']} 0%,
-    ${({ theme }) => theme.colors['emphasis-medium-bg']} 30%,
-    ${({ theme }) => theme.colors['emphasis-high-fg']} 70%,
-    ${({ theme }) => theme.colors['surface-bg']} 100%
-  );
-
-  border-radius: 8px;
+  /* Overlay positioning - no impact on document flow */
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1;
 
-  /* Performance optimized */
+  background: linear-gradient(
+    130deg,
+    ${({ theme }) => theme.colors['surface-bg']} 0%,
+    ${({ theme }) => theme.colors['emphasis-low-bg']} 30%,
+    ${({ theme }) => theme.colors['emphasis-low-bg-active']} 70%,
+    ${({ theme }) => theme.colors['surface-bg']} 100%
+  );
+
+  border-radius: 8px;
   opacity: ${({ $state }) => ($state === 'loading' ? 1 : 0)};
-  transition: opacity 0.3s ease-out;
+  overflow: hidden;
+
+  /* Interaction blocking */
+  z-index: 10;
+  pointer-events: ${({ $state }) => ($state === 'loading' ? 'auto' : 'none')};
+
+  /* Performance optimizations */
+  contain: layout style paint;
+  will-change: opacity;
 `
