@@ -65,7 +65,7 @@ export const DSGridMasonry = <
 
   const renderColumnItem = useCallback(
     (item: T & { originalIndex: number }) => (
-      <div key={item.id}>
+      <div key={item.originalIndex}>
         {renderItem(item as T, columnWidth, item.originalIndex)}
       </div>
     ),

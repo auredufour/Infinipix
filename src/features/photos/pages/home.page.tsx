@@ -10,7 +10,7 @@ const SCPhotosContainer = styled.div`
   --header-height: 80px;
 
   max-width: var(--content-max-width);
-  padding: 0 var(--page-gutter) var(--section-gap);
+  padding: var(--section-gap);
   margin: var(--header-height) auto 0;
 `
 
@@ -24,7 +24,7 @@ export const HomePage = () => {
       const isPriority = originalPosition < 12
       return (
         <PhotoCard
-          key={item.id}
+          key={originalPosition}
           {...item}
           src={item.download_url}
           columnWidth={columnWidth}

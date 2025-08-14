@@ -64,7 +64,6 @@ export const PhotoCard = memo(
       <>
         <SCCardContainer
           height={displayHeight}
-          key={id}
           ref={imgRef}
           width={columnWidth}
         >
