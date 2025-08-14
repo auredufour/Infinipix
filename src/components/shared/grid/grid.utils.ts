@@ -19,33 +19,39 @@ export function calculateColumnWidth(
   return Math.floor((containerWidth - gap * (count - 1)) / count)
 }
 
-// Optimized distribution algorithm - O(n) instead of O(n²)
 export function distributeItems<T extends { width: number; height: number }>(
   items: T[],
   columnCount: number,
   columnWidth: number,
   gap: number,
-): T[][] {
-  const columns = createEmptyColumns<T>(columnCount)
-  const heights = Array(columnCount).fill(0)
+): Array<Array<T & { originalIndex: number }>> {
+  const { columns } = items.reduce(
+    (acc, item, index) => {
+      // Find shortest column
+      let shortestIndex = 0
+      let shortestHeight = acc.heights[0]!
 
-  items.forEach((item) => {
-    // Find shortest column efficiently without Math.min + indexOf
-    let shortestIndex = 0
-    let shortestHeight = heights[0]
-
-    for (let i = 1; i < heights.length; i++) {
-      if (heights[i] < shortestHeight) {
-        shortestHeight = heights[i]
-        shortestIndex = i
+      for (let i = 1; i < acc.heights.length; i++) {
+        const currentHeight = acc.heights[i]!
+        if (currentHeight < shortestHeight) {
+          shortestHeight = currentHeight
+          shortestIndex = i
+        }
       }
-    }
 
-    columns[shortestIndex].push(item)
+      // Add item to shortest column
+      acc.columns[shortestIndex]!.push({ ...item, originalIndex: index })
 
-    const aspect = item.height / item.width
-    heights[shortestIndex] += columnWidth * aspect + gap
-  })
+      const aspectRatio = item.height / item.width
+      acc.heights[shortestIndex]! += columnWidth * aspectRatio + gap
+
+      return acc
+    },
+    {
+      columns: createEmptyColumns<T & { originalIndex: number }>(columnCount),
+      heights: Array(columnCount).fill(0),
+    },
+  )
 
   return columns
 }

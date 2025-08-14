@@ -9,6 +9,17 @@ import {
   getColumnCount,
 } from './grid.utils'
 
+const useDebounce = (callback: () => void, delay: number) => {
+  const timeoutRef = useRef<number | undefined>(undefined)
+
+  return useCallback(() => {
+    if (timeoutRef.current !== undefined) {
+      window.clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = window.setTimeout(callback, delay)
+  }, [callback, delay])
+}
+
 export const DSGridMasonry = <
   T extends { id: string; width: number; height: number },
 >({
@@ -16,7 +27,9 @@ export const DSGridMasonry = <
   gap = 24,
   renderItem,
 }: DSGridMasonryProps<T>) => {
-  const [columns, setColumns] = useState<T[][]>(() => [])
+  const [columns, setColumns] = useState<
+    Array<Array<T & { originalIndex: number }>>
+  >(() => [])
   const [columnCount, setColumnCount] = useState(0)
   const [columnWidth, setColumnWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -35,25 +48,13 @@ export const DSGridMasonry = <
     const newColumnWidth = Math.round(
       calculateColumnWidth(containerWidth, count, gap),
     )
+
     if (columnWidth !== newColumnWidth) {
       setColumnWidth(newColumnWidth)
     }
   }, [gap, columnCount, columnWidth])
 
-  const handleOnResize = useCallback(() => {
-    let requestAnimationFrameId: number | null = null
-
-    return () => {
-      if (requestAnimationFrameId) {
-        cancelAnimationFrame(requestAnimationFrameId)
-      }
-
-      requestAnimationFrameId = requestAnimationFrame(() => {
-        calculateColumns()
-        requestAnimationFrameId = null
-      })
-    }
-  }, [calculateColumns])()
+  const debouncedCalculateColumns = useDebounce(calculateColumns, 50)
 
   const distributedColumns = useMemo(
     () =>
@@ -63,6 +64,15 @@ export const DSGridMasonry = <
     [data, columnCount, columnWidth, gap],
   )
 
+  const renderColumnItem = useCallback(
+    (item: T & { originalIndex: number }) => (
+      <div key={item.id}>
+        {renderItem(item as T, columnWidth, item.originalIndex)}
+      </div>
+    ),
+    [renderItem, columnWidth],
+  )
+
   useEffect(() => {
     setColumns(distributedColumns)
   }, [distributedColumns])
@@ -70,20 +80,18 @@ export const DSGridMasonry = <
   useEffect(() => {
     calculateColumns()
 
-    window.addEventListener('resize', handleOnResize)
-    return () => window.removeEventListener('resize', handleOnResize)
-  }, [calculateColumns, handleOnResize])
+    window.addEventListener('resize', debouncedCalculateColumns)
+    return () => window.removeEventListener('resize', debouncedCalculateColumns)
+  }, [calculateColumns, debouncedCalculateColumns])
 
   const memoizedColumns = useMemo(
     () =>
       columns.map((column, columnIndex) => (
         <SCColumn key={`column-${columnIndex}`} $gap={gap} $width={columnWidth}>
-          {column.map((item) => (
-            <div key={item.id}>{renderItem(item, columnWidth)}</div>
-          ))}
+          {column.map(renderColumnItem)}
         </SCColumn>
       )),
-    [columns, gap, columnWidth, renderItem],
+    [columns, gap, columnWidth, renderColumnItem],
   )
 
   return (
