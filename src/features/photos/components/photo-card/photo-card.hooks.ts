@@ -9,10 +9,7 @@ import { downloadImage } from './photo-card.utils'
  * @param threshold - The threshold for the intersection observer
  * @returns An object containing the ref and isInView state
  */
-export const useIntersectionObserver = (
-  rootMargin = '2000px',
-  threshold = 0.1,
-) => {
+export const useImageLazyLoading = (rootMargin = '600px', threshold = 0.1) => {
   const [isInView, setIsInView] = useState(false)
   const imgRef = useRef(null)
 
