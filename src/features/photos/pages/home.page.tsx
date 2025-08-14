@@ -2,16 +2,13 @@ import { useCallback } from 'react'
 import styled from 'styled-components'
 
 import { DSGridMasonry } from '../../../components/shared/grid/grid.component'
+import { visuallyHiddenCssRules } from '../../../shared/utils/style.utils'
 import { PhotoCard } from '../components/photo-card/photo-card.component'
 import type { Photo } from '../photo.types'
 import { useInfinitePhotos } from '../usePhoto'
 
-const SCPhotosContainer = styled.div`
-  --header-height: 80px;
-
-  max-width: var(--content-max-width);
-  padding: var(--section-gap);
-  margin: var(--header-height) auto 0;
+const SCHeader = styled.h1`
+  ${visuallyHiddenCssRules}
 `
 
 export const HomePage = () => {
@@ -38,10 +35,11 @@ export const HomePage = () => {
   )
 
   return (
-    <SCPhotosContainer>
+    <div>
+      <SCHeader as="h1">Gallery of Images</SCHeader>
       <DSGridMasonry data={allPhotos} renderItem={renderItem} />
       <div role="none" ref={sentinel} style={{ height: 1 }} />
-    </SCPhotosContainer>
+    </div>
   )
 }
 

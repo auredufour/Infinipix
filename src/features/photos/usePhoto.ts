@@ -52,24 +52,6 @@ function getNextPage(header: string | null): number | undefined {
 }
 
 /**
- * Keeps a rootMargin string in sync with the current viewport height.
- * Example return value: "800px 0px" (when viewport height = 800).
- */
-function useRootMargin() {
-  const [rootMargin, setRootMargin] = useState(
-    () => `${window.innerHeight}px 0px`,
-  )
-
-  useEffect(() => {
-    const handleResize = () => setRootMargin(`${window.innerHeight}px 0px`)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  return rootMargin
-}
-
-/**
  * Declarative wrapper around IntersectionObserver.
  * Automatically disconnects on unmount or when dependencies change.
  */
@@ -168,38 +150,50 @@ export function useInfinitePhotos(limit = 30) {
   const nextPageRef = useRef<number | null>(1)
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
-  // Dynamically calculated margin so we start fetching when the sentinel is one viewport away
-  const rootMargin = useRootMargin()
+  const rootMargin = '100% 0%'
   const [pages, setPages] = useState<InfinitePhotoPage[]>([])
+
+  // Add loading state to prevent concurrent requests
+  const isLoadingRef = useRef(false)
+  const hasInitiallyLoadedRef = useRef(false)
 
   /**
    * Fetches the page referenced by `nextPageRef` and appends it to the list.
-   * The ref is used so this callback doesn’t change whenever pages are added,
+   * The ref is used so this callback doesn't change whenever pages are added,
    * preventing unnecessary teardown / re-creation of the IntersectionObserver.
    */
   const fetchNextPage = useCallback(async () => {
     const page = nextPageRef.current
-    if (!page) {
+    if (!page || isLoadingRef.current) {
       return
     }
 
-    const { items, linkHeader } = await fetchPaginatedPhotos({ page, limit })
-    const next = getNextPage(linkHeader)
-    nextPageRef.current = next ?? null
+    isLoadingRef.current = true
 
-    setPages((prev) => appendUniquePhotos(prev, items, next))
+    try {
+      const { items, linkHeader } = await fetchPaginatedPhotos({ page, limit })
+      const next = getNextPage(linkHeader)
+      nextPageRef.current = next ?? null
+
+      setPages((prev) => appendUniquePhotos(prev, items, next))
+    } finally {
+      isLoadingRef.current = false
+    }
   }, [limit])
 
-  // Load the first page on mount
+  // Load the first page on mount - only once
   useEffect(() => {
-    fetchNextPage()
-  }, [fetchNextPage])
+    if (!hasInitiallyLoadedRef.current) {
+      hasInitiallyLoadedRef.current = true
+      fetchNextPage()
+    }
+  }, []) // Empty dependency array to run only once
 
   /** Callback fired by the IntersectionObserver */
   const handleIntersection = useCallback<IntersectionObserverCallback>(
     (entries) => {
       const entry = entries[0]
-      if (entry && entry.isIntersecting) {
+      if (entry && entry.isIntersecting && !isLoadingRef.current) {
         fetchNextPage()
       }
     },
