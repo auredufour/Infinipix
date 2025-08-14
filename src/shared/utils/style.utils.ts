@@ -12,8 +12,11 @@ export const visuallyHiddenCssRules = css`
 `
 
 export const interactiveElementHover = (colorBg?: string) => css`
+  --colorBg: ${colorBg};
+
   &:hover {
-    ${colorBg && `background-color: ${colorBg};`}
+    ${colorBg &&
+    `background-color: var(--colorBg); border-color: var(--colorBg);`}
   }
 `
 
@@ -24,11 +27,14 @@ export const interactiveElementFocusVisible = ({
   colorBg?: string
   colorOutline?: string
 }) => css`
+  --colorBg: ${colorBg};
+
   &:focus-visible {
     outline-offset: 2px;
     outline: 2px solid ${colorOutline || 'var(--colorOutline)'};
 
-    ${colorBg && `background-color: ${colorBg};`}
+    ${colorBg &&
+    `background-color: var(--colorBg); border-color: var(--colorBg);`}
   }
 `
 

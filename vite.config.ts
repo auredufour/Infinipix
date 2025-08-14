@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import { analyzer } from 'vite-bundle-analyzer'
+import viteCompression from 'vite-plugin-compression'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,14 +13,31 @@ export default defineConfig({
           [
             'babel-plugin-styled-components',
             {
-              displayName: true,
-              fileName: false,
+              displayName: process.env.NODE_ENV !== 'production',
+              fileName: process.env.NODE_ENV !== 'production',
               minify: true,
               pure: true,
+              // Remove styled-components runtime overhead in production
+              ...(process.env.NODE_ENV === 'production' && {
+                displayName: false,
+                fileName: false,
+              }),
             },
           ],
         ],
       },
+    }),
+    // Enable gzip compression for all assets
+    viteCompression({
+      algorithm: 'gzip',
+      ext: '.gz',
+      threshold: 512, // Compress files larger than 512B
+    }),
+    // Enable brotli compression for even better compression
+    viteCompression({
+      algorithm: 'brotliCompress',
+      ext: '.br',
+      threshold: 512,
     }),
     ...(process.env.ANALYZE ? [analyzer()] : []),
   ],
@@ -31,26 +49,63 @@ export default defineConfig({
   },
 
   build: {
-    sourcemap: true,
-    chunkSizeWarningLimit: 1000,
+    sourcemap: false,
+    chunkSizeWarningLimit: 200,
+    minify: 'esbuild',
+    target: 'es2022',
+    cssTarget: 'chrome80',
     rollupOptions: {
+      treeshake: {
+        moduleSideEffects: false,
+        preset: 'recommended',
+      },
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          styled: ['styled-components'],
-        },
-        chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId
-          if (facadeModuleId) {
-            const name = facadeModuleId
-              .split('/')
-              .pop()
-              ?.replace('.tsx', '')
-              .replace('.ts', '')
-            return `js/${name}-[hash].js`
+        manualChunks: (id) => {
+          // React core (keep small)
+          if (
+            id.includes('react/jsx-runtime') ||
+            id.includes('react/jsx-dev-runtime')
+          ) {
+            return 'react-jsx'
           }
-          return 'js/[name]-[hash].js'
+          if (id.includes('react-dom/client')) {
+            return 'react-dom'
+          }
+          if (
+            id.includes('react') &&
+            !id.includes('react-dom') &&
+            !id.includes('react-router')
+          ) {
+            return 'react-core'
+          }
+
+          // Router as separate chunk
+          if (id.includes('react-router')) {
+            return 'react-router'
+          }
+
+          // Styled components
+          if (id.includes('styled-components')) {
+            return 'styled'
+          }
+
+          // Other vendors
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+
+          // App chunks
+          if (id.includes('/src/features/photos/')) {
+            return 'photos'
+          }
+          if (id.includes('/src/components/shared/')) {
+            return 'components'
+          }
+          if (id.includes('/src/styles/')) {
+            return 'styles'
+          }
         },
+        chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name?.split('.') || []
           const ext = info[info.length - 1]
@@ -65,10 +120,33 @@ export default defineConfig({
         },
       },
     },
-    minify: 'terser',
+  },
+
+  esbuild: {
+    target: 'es2022',
+    legalComments: 'none',
+    minifyIdentifiers: true,
+    minifySyntax: true,
+    minifyWhitespace: true,
+    treeShaking: true,
+    // Remove unused imports
+    pure: ['console.log', 'console.warn', 'console.info'],
   },
 
   optimizeDeps: {
     include: ['react', 'react-dom', 'styled-components'],
+    esbuildOptions: {
+      target: 'es2022',
+    },
+  },
+
+  css: {
+    devSourcemap: false,
+  },
+
+  preview: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
   },
 })

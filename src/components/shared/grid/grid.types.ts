@@ -3,5 +3,9 @@ export interface DSGridMasonryProps<
 > {
   data: T[]
   gap?: number
-  renderItem: (item: T, columnWidth: number) => React.ReactNode
+  renderItem: (
+    item: T,
+    columnWidth: number,
+    originalIndex: number,
+  ) => React.ReactNode
 }

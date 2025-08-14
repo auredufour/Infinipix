@@ -9,37 +9,38 @@ import { useInfinitePhotos } from '../usePhoto'
 const SCPhotosContainer = styled.div`
   --header-height: 80px;
 
-  max-width: ${({ theme }) => theme.spacings['content-max-width']};
-  padding: 0 ${({ theme }) => theme.spacings['page-gutter']}
-    ${({ theme }) => theme.spacings['section-gap']};
-  margin: ${({ theme }) =>
-    `calc(var(--header-height) + ${theme.spacings['page-gutter']}) auto 0`};
+  max-width: var(--content-max-width);
+  padding: 0 var(--page-gutter) var(--section-gap);
+  margin: var(--header-height) auto 0;
 `
 
 export const HomePage = () => {
   const { pages, sentinel } = useInfinitePhotos(30)
 
+  const allPhotos = pages.flatMap((p) => p.items)
+
   const renderItem = useCallback(
-    (item: Photo, columnWidth: number) => (
-      <PhotoCard
-        key={item.id}
-        {...item}
-        src={item.download_url}
-        columnWidth={columnWidth}
-        alt={item.author}
-        downloadUrl={item.download_url}
-      />
-    ),
+    (item: Photo, columnWidth: number, originalPosition: number) => {
+      const isPriority = originalPosition < 12
+      return (
+        <PhotoCard
+          key={item.id}
+          {...item}
+          src={item.download_url}
+          columnWidth={columnWidth}
+          alt={item.author}
+          downloadUrl={item.download_url}
+          priority={isPriority ? 'eager' : 'lazy'}
+        />
+      )
+    },
     [],
   )
 
   return (
     <SCPhotosContainer>
-      <DSGridMasonry
-        data={pages.flatMap((p) => p.items)}
-        renderItem={renderItem}
-      />
-      <div ref={sentinel} style={{ height: 1 }} />
+      <DSGridMasonry data={allPhotos} renderItem={renderItem} />
+      <div role="none" ref={sentinel} style={{ height: 1 }} />
     </SCPhotosContainer>
   )
 }
