@@ -19,6 +19,7 @@ export const HomePage = () => {
   const renderItem = useCallback(
     (item: Photo, columnWidth: number, originalPosition: number) => {
       const isPriority = originalPosition < 12
+
       return (
         <PhotoCard
           key={originalPosition}

@@ -59,6 +59,7 @@ export const PhotoCard = memo(
     }, [])
 
     const shouldRender = priority === 'eager' || isInView
+    const skeletonState = isLoaded ? 'inactive' : 'loading'
 
     return (
       <>
@@ -67,7 +68,7 @@ export const PhotoCard = memo(
           ref={imgRef}
           width={columnWidth}
         >
-          <DSSkeleton state={isLoaded ? 'inactive' : 'loading'} />
+          <DSSkeleton state={skeletonState} />
 
           {shouldRender && (
             <PhotoCardContent
