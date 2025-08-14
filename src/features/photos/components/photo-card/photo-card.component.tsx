@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo, useState } from 'react'
 
 import { DSSkeleton } from '../../../../components/shared/skeleton/skeleton.component'
 import { PhotoModal } from '../photo-modal/photo-modal.component'
-import { useDownloadHandler, useImageLazyLoading } from './photo-card.hooks'
+import { useDownloadHandler } from './photo-card.hooks'
 import { SCCardContainer } from './photo-card.styles'
 import type { PhotoCardComponentProps } from './photo-card.types'
 import { PhotoCardContent } from './subcomponents/photo-card-content.component'
@@ -15,7 +15,7 @@ export const PhotoCard = memo(
     height,
     id,
     onLoad,
-    priority = 'lazy',
+    isAboveFold = false,
     src,
     width,
     ...props
@@ -23,7 +23,6 @@ export const PhotoCard = memo(
     const [isModalOpen, setIsModalOpen] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
 
-    const { imgRef, isInView } = useImageLazyLoading()
     const handleOnDownload = useDownloadHandler(downloadUrl, author)
 
     const aspectRatio = useMemo(() => height / width, [height, width])
@@ -58,34 +57,27 @@ export const PhotoCard = memo(
       setIsModalOpen(false)
     }, [])
 
-    const shouldRender = priority === 'eager' || isInView
     const skeletonState = isLoaded ? 'inactive' : 'loading'
 
     return (
       <>
-        <SCCardContainer
-          height={displayHeight}
-          ref={imgRef}
-          width={columnWidth}
-        >
+        <SCCardContainer height={displayHeight} width={columnWidth}>
           <DSSkeleton state={skeletonState} />
 
-          {shouldRender && (
-            <PhotoCardContent
-              author={author}
-              columnWidth={columnWidth}
-              downloadUrl={downloadUrl}
-              height={height}
-              id={id}
-              isLoaded={isLoaded}
-              onLoad={handleOnImageLoad}
-              onOpen={handleOnOpenModal}
-              priority={priority}
-              src={src}
-              width={width}
-              {...props}
-            />
-          )}
+          <PhotoCardContent
+            author={author}
+            columnWidth={columnWidth}
+            downloadUrl={downloadUrl}
+            height={height}
+            id={id}
+            isLoaded={isLoaded}
+            onLoad={handleOnImageLoad}
+            onOpen={handleOnOpenModal}
+            priority={isAboveFold ? 'eager' : 'lazy'}
+            src={src}
+            width={width}
+            {...props}
+          />
         </SCCardContainer>
 
         {isModalOpen && (

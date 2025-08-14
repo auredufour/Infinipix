@@ -1,9 +1,9 @@
 const IMAGE_SIZES_MAP = {
   200: 200,
-  300: 300,
-  400: 400,
-  500: 500,
-  600: 600,
+  300: 280,
+  400: 360,
+  500: 440,
+  600: 520,
 }
 
 export function getImageSize(columnWidth: number): number {
@@ -41,12 +41,12 @@ export function getSrcSet(
   if (idMatch) {
     const id = idMatch[1]
     const src1x = `https://picsum.photos/id/${id}/${width}/${height}`
-    const src2x = `https://picsum.photos/id/${id}/${width * 2}/${height * 2}`
-    return `${src1x} 1x, ${src2x} 2x`
+    const src1_5x = `https://picsum.photos/id/${id}/${Math.round(width * 1.25)}/${Math.round(height * 1.25)}`
+    return `${src1x} 1x, ${src1_5x} 1.25x`
   }
   const src1x = `${downloadUrl}?w=${width}&h=${height}`
-  const src2x = `${downloadUrl}?w=${width * 2}&h=${height * 2}`
-  return `${src1x} 1x, ${src2x} 2x`
+  const src1_5x = `${downloadUrl}?w=${Math.round(width * 1.25)}&h=${Math.round(height * 1.25)}`
+  return `${src1x} 1x, ${src1_5x} 1.25x`
 }
 
 export async function downloadImage(url: string, filenameBase: string) {

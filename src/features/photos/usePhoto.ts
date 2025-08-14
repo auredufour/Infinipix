@@ -150,7 +150,7 @@ export function useInfinitePhotos(limit = 30) {
   const nextPageRef = useRef<number | null>(1)
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
-  const rootMargin = '100% 0%'
+  const rootMargin = '150% 0%'
   const [pages, setPages] = useState<InfinitePhotoPage[]>([])
 
   // Add loading state to prevent concurrent requests

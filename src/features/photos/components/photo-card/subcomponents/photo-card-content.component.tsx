@@ -22,8 +22,8 @@ export const PhotoCardContent = memo(
     isLoaded,
     onLoad,
     onOpen,
-    priority = 'lazy',
     width,
+    priority = 'lazy',
   }: PhotoCardProps) => {
     const handleOnDownload = useDownloadHandler(downloadUrl, author)
     const handleOnClick = useCallback(onOpen, [onOpen])
@@ -55,6 +55,7 @@ export const PhotoCardContent = memo(
           <DSImage
             alt={author}
             borderRadius={12}
+            fetchPriority={priority === 'eager' ? 'high' : 'low'}
             height={imageHeight}
             isLoaded={isLoaded}
             loading={priority}
