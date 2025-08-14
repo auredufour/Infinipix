@@ -15,7 +15,7 @@ export const spacing = {
   'page-gutter': '32px',
   'page-gutter-mobile': '16px',
   'section-gap': '40px',
-  'content-max-width': '1600px',
+  'content-max-width': '1400px',
 
   'grid-gap': '24px',
   'grid-gap-dense': '16px',
