@@ -1,4 +1,17 @@
-export type PhotoCardProps = {
+export interface PhotoCardComponentProps {
+  alt?: string
+  author: string
+  columnWidth: number
+  downloadUrl: string
+  height: number
+  id: string
+  isAboveFold?: boolean
+  onLoad?: () => void
+  src: string
+  width: number
+}
+
+export interface PhotoCardProps {
   alt?: string
   author: string
   columnWidth: number
@@ -11,17 +24,4 @@ export type PhotoCardProps = {
   priority?: 'eager' | 'lazy'
   src: string
   width: number
-}
-
-export interface PhotoCardComponentProps {
-  width: number
-  height: number
-  alt: string
-  onLoad?: () => void
-  columnWidth: number
-  author: string
-  downloadUrl: string
-  id: string
-  priority?: 'eager' | 'lazy'
-  src: string
 }

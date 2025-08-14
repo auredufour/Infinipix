@@ -7,6 +7,8 @@ import { PhotoCard } from '../components/photo-card/photo-card.component'
 import type { Photo } from '../photo.types'
 import { useInfinitePhotos } from '../usePhoto'
 
+const PRIORITY_THRESHOLD = 12
+
 const SCHeader = styled.h1`
   ${visuallyHiddenCssRules}
 `
@@ -26,17 +28,17 @@ export const HomePage = () => {
 
   const renderItem = useCallback(
     (item: Photo, columnWidth: number, originalPosition: number) => {
-      const isPriority = originalPosition < 12
+      const isAboveFold = originalPosition < PRIORITY_THRESHOLD
 
       return (
         <PhotoCard
-          key={originalPosition}
-          {...item}
-          src={item.download_url}
-          columnWidth={columnWidth}
           alt={item.author}
+          columnWidth={columnWidth}
           downloadUrl={item.download_url}
-          priority={isPriority ? 'eager' : 'lazy'}
+          isAboveFold={isAboveFold}
+          key={originalPosition}
+          src={item.download_url}
+          {...item}
         />
       )
     },

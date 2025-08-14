@@ -2,10 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { downloadImage } from './photo-card.utils'
 
-const ROOT_MARGIN = '150% 0%'
-
-let sharedObserver: IntersectionObserver | null = null
-const observedElements = new Map<Element, () => void>()
+const ROOT_MARGIN = '50% 0%'
 
 export const useImageLazyLoading = () => {
   const [isInView, setIsInView] = useState(false)
@@ -16,33 +13,15 @@ export const useImageLazyLoading = () => {
 
     if (!element || isInView) return
 
-    const observer = getSharedObserver()
-    const callback = () => {
-      setIsInView(true)
-      observer.unobserve(element)
-      observedElements.delete(element)
-    }
-
-    observedElements.set(element, callback)
-    observer.observe(element)
-
-    return () => {
-      observer.unobserve(element)
-      observedElements.delete(element)
-    }
-  }, [isInView])
-
-  return { imgRef, isInView }
-}
-
-const getSharedObserver = () => {
-  if (!sharedObserver) {
-    sharedObserver = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const callback = observedElements.get(entry.target)
-          if (callback && entry.isIntersecting) {
-            callback()
+          if (entry.isIntersecting) {
+            setIsInView(true)
+            console.log(
+              '🔍 IntersectionObserver triggered for element:',
+              element,
+            )
           }
         })
       },
@@ -51,8 +30,15 @@ const getSharedObserver = () => {
         threshold: 0,
       },
     )
-  }
-  return sharedObserver
+
+    observer.observe(element)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [isInView])
+
+  return { imgRef, isInView }
 }
 
 export const useDownloadHandler = (downloadUrl: string, author: string) => {
