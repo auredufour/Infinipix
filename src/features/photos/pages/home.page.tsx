@@ -1,12 +1,12 @@
 import { useCallback } from 'react'
 import styled from 'styled-components'
 
-import { DSGridMansory } from '../../../components/shared/grid/grid.component'
+import { DSGridMasonry } from '../../../components/shared/grid/grid.component'
 import { PhotoCard } from '../components/photo-card/photo-card.component'
 import type { Photo } from '../photo.types'
 import { useInfinitePhotos } from '../usePhoto'
 
-const StyledPhotosContainer = styled.div`
+const SCPhotosContainer = styled.div`
   --header-height: 80px;
 
   max-width: ${({ theme }) => theme.spacings['content-max-width']};
@@ -16,7 +16,7 @@ const StyledPhotosContainer = styled.div`
     `calc(var(--header-height) + ${theme.spacings['page-gutter']}) auto 0`};
 `
 
-export function HomePage() {
+export const HomePage = () => {
   const { pages, sentinel } = useInfinitePhotos(30)
 
   const renderItem = useCallback(
@@ -34,12 +34,14 @@ export function HomePage() {
   )
 
   return (
-    <StyledPhotosContainer>
-      <DSGridMansory
+    <SCPhotosContainer>
+      <DSGridMasonry
         data={pages.flatMap((p) => p.items)}
         renderItem={renderItem}
       />
       <div ref={sentinel} style={{ height: 1 }} />
-    </StyledPhotosContainer>
+    </SCPhotosContainer>
   )
 }
+
+HomePage.displayName = 'HomePage'

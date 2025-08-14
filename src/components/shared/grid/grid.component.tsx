@@ -9,7 +9,7 @@ import {
   getColumnCount,
 } from './grid.utils'
 
-export const DSGridMansory = <
+export const DSGridMasonry = <
   T extends { id: string; width: number; height: number },
 >({
   data,
@@ -92,3 +92,5 @@ export const DSGridMansory = <
     </SCGridContainer>
   )
 }
+
+DSGridMasonry.displayName = 'DSGridMasonry'
