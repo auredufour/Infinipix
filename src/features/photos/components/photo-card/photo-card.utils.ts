@@ -44,7 +44,6 @@ export function getSrcSet(
     const src2x = `https://picsum.photos/id/${id}/${width * 2}/${height * 2}`
     return `${src1x} 1x, ${src2x} 2x`
   }
-
   const src1x = `${downloadUrl}?w=${width}&h=${height}`
   const src2x = `${downloadUrl}?w=${width * 2}&h=${height * 2}`
   return `${src1x} 1x, ${src2x} 2x`

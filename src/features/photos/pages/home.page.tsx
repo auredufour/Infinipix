@@ -28,7 +28,7 @@ export const HomePage = () => {
 
   const allPhotos = pages.flatMap((p) => p.items)
 
-  // preloading of first 3 images
+  // Simple preloading of first 3 images
   const preloadFirstImages = useCallback(() => {
     allPhotos.slice(0, 3).forEach((photo) => {
       if (photo?.download_url) {
@@ -48,7 +48,6 @@ export const HomePage = () => {
   const renderItem = useCallback(
     (item: Photo, columnWidth: number, originalPosition: number) => {
       const isPriority = originalPosition < 12
-
       return (
         <PhotoCard
           key={item.id}

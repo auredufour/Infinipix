@@ -11,7 +11,6 @@ import {
 
 const useDebounce = (callback: () => void, delay: number) => {
   const timeoutRef = useRef<number | undefined>(undefined)
-
   return useCallback(() => {
     if (timeoutRef.current !== undefined) {
       window.clearTimeout(timeoutRef.current)

@@ -103,9 +103,10 @@ function appendUniquePhotos(
   const lastPageIds = lastPage
     ? new Set(lastPage.items.map((i) => i.id))
     : new Set()
-  const uniqueItems = items.filter((i) => !lastPageIds.has(i.id))
 
-  return [...prev, { items: uniqueItems, next }]
+  const unique = items.filter((i) => !lastPageIds.has(i.id))
+
+  return [...prev, { items: unique, next }]
 }
 
 /**

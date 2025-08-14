@@ -1,5 +1,5 @@
 const SMALL_SCREEN_WIDTH = 576
-const MEDIUM_SCREEN_WIDTH = 992
+const MEDIUM_SCREEN_WIDTH = 768
 
 export function getColumnCount(screenWidth: number): number {
   if (screenWidth < SMALL_SCREEN_WIDTH) return 1
@@ -25,33 +25,29 @@ export function distributeItems<T extends { width: number; height: number }>(
   columnWidth: number,
   gap: number,
 ): Array<Array<T & { originalIndex: number }>> {
-  const { columns } = items.reduce(
-    (acc, item, index) => {
-      // Find shortest column
-      let shortestIndex = 0
-      let shortestHeight = acc.heights[0]!
+  const columns = createEmptyColumns<T & { originalIndex: number }>(columnCount)
+  const heights: number[] = Array(columnCount).fill(0)
 
-      for (let i = 1; i < acc.heights.length; i++) {
-        const currentHeight = acc.heights[i]!
-        if (currentHeight < shortestHeight) {
-          shortestHeight = currentHeight
-          shortestIndex = i
-        }
+  items.forEach((item, index) => {
+    // Find shortest column
+    let shortestIndex = 0
+    let shortestHeight = heights[0]!
+
+    for (let i = 1; i < heights.length; i++) {
+      const currentHeight = heights[i]!
+      if (currentHeight < shortestHeight) {
+        shortestHeight = currentHeight
+        shortestIndex = i
       }
+    }
 
-      // Add item to shortest column
-      acc.columns[shortestIndex]!.push({ ...item, originalIndex: index })
+    // Add item to shortest column
+    columns[shortestIndex]!.push({ ...item, originalIndex: index })
 
-      const aspectRatio = item.height / item.width
-      acc.heights[shortestIndex]! += columnWidth * aspectRatio + gap
-
-      return acc
-    },
-    {
-      columns: createEmptyColumns<T & { originalIndex: number }>(columnCount),
-      heights: Array(columnCount).fill(0),
-    },
-  )
+    // Update height
+    const aspectRatio = item.height / item.width
+    heights[shortestIndex]! += columnWidth * aspectRatio + gap
+  })
 
   return columns
 }

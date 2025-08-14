@@ -7,26 +7,6 @@ const ROOT_MARGIN = '150% 0%'
 let sharedObserver: IntersectionObserver | null = null
 const observedElements = new Map<Element, () => void>()
 
-const getSharedObserver = () => {
-  if (!sharedObserver) {
-    sharedObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const callback = observedElements.get(entry.target)
-          if (callback && entry.isIntersecting) {
-            callback()
-          }
-        })
-      },
-      {
-        rootMargin: ROOT_MARGIN,
-        threshold: 0,
-      },
-    )
-  }
-  return sharedObserver
-}
-
 export const useImageLazyLoading = () => {
   const [isInView, setIsInView] = useState(false)
   const imgRef = useRef<HTMLDivElement>(null)
@@ -53,6 +33,26 @@ export const useImageLazyLoading = () => {
   }, [isInView])
 
   return { imgRef, isInView }
+}
+
+const getSharedObserver = () => {
+  if (!sharedObserver) {
+    sharedObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const callback = observedElements.get(entry.target)
+          if (callback && entry.isIntersecting) {
+            callback()
+          }
+        })
+      },
+      {
+        rootMargin: ROOT_MARGIN,
+        threshold: 0,
+      },
+    )
+  }
+  return sharedObserver
 }
 
 export const useDownloadHandler = (downloadUrl: string, author: string) => {

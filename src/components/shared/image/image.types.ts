@@ -5,6 +5,6 @@ export interface DSImageProps extends ImgHTMLAttributes<HTMLImageElement> {
   fallbackSrc?: string
   height?: number
   isLoaded?: boolean
-  priority?: 'eager' | 'lazy'
+  loading?: 'lazy' | 'eager'
   width?: number
 }

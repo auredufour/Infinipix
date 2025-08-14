@@ -46,9 +46,10 @@ export const PhotoCard = memo(
     )
 
     const handleOnImageLoad = useCallback(() => {
+      console.log('🖼️ Image loaded for ID:', id)
       setIsLoaded(true)
       onLoad?.()
-    }, [onLoad])
+    }, [onLoad, id])
 
     const handleOnOpenModal = useCallback(() => {
       setIsModalOpen(true)
@@ -68,10 +69,23 @@ export const PhotoCard = memo(
           ref={imgRef}
           width={columnWidth}
         >
-          <DSSkeleton
-            state={isLoaded ? 'inactive' : 'loading'}
-            height={displayHeight}
-          />
+          <DSSkeleton state={isLoaded ? 'inactive' : 'loading'} />
+          {/* Debug: Show loading state */}
+          {!isLoaded && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                background: 'red',
+                color: 'white',
+                fontSize: '10px',
+                zIndex: 20,
+              }}
+            >
+              LOADING {id}
+            </div>
+          )}
 
           {shouldRender && (
             <PhotoCardContent
