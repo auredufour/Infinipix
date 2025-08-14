@@ -9,9 +9,9 @@ export const DSImage = memo(
     borderRadius,
     height,
     isLoaded: controlledIsLoaded,
+    loading = 'lazy',
     onError,
     onLoad,
-    priority = false,
     src,
     width,
     ...props
@@ -51,7 +51,7 @@ export const DSImage = memo(
             $isLoaded={isLoaded}
             $aspectRatio={aspectRatio}
             alt={alt}
-            loading={priority ? 'eager' : 'lazy'}
+            loading={loading}
             onError={handleOnError}
             onLoad={handleOnLoad}
             src={src}
