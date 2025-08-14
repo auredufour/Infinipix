@@ -5,7 +5,8 @@ export const getInitials = (name?: string) => {
   const words = name.trim().split(/\s+/)
   const initials = words
     .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
+    .filter((w) => w.length > 0)
+    .map((w) => w[0]!.toUpperCase())
     .join('')
 
   return initials

@@ -108,8 +108,8 @@ export const DSModalContent = memo(
           return
         }
 
-        const first = focusableElements[0]
-        const last = focusableElements[focusableElements.length - 1]
+        const first = focusableElements[0]!
+        const last = focusableElements[focusableElements.length - 1]!
 
         if (evt.shiftKey) {
           if (document.activeElement === first) {
