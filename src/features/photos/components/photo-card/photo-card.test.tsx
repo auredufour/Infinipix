@@ -2,8 +2,9 @@ import '@testing-library/jest-dom'
 
 import userEvent from '@testing-library/user-event'
 
-import { renderWithTheme, screen } from '../../../../tests/test-utils'
-import { PhotoCard } from './photo-tile.component'
+import { renderWithTheme, screen } from '../../../../../tests/test-utils'
+import { PhotoCard } from './photo-card.component'
+import { PhotoCardContent } from './subcomponents/photo-card-content.component'
 
 // Mock photo props
 const defaultProps = {
@@ -21,13 +22,9 @@ describe('PhotoCard', () => {
   it('should render skeleton initially', () => {
     renderWithTheme(<PhotoCard {...defaultProps} />)
 
-    // Should render skeleton while not in view
     expect(screen.getByTestId('skeleton')).toBeInTheDocument()
   })
 })
-
-// Test the PhotoCardContent component separately since it's exported
-import { PhotoCardContent } from './photo-tile.component'
 
 describe('PhotoCardContent', () => {
   const contentProps = {

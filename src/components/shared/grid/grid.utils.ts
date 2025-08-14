@@ -19,7 +19,8 @@ export function calculateColumnWidth(
   return Math.floor((containerWidth - gap * (count - 1)) / count)
 }
 
-export function distributePhotos<T extends { width: number; height: number }>(
+// Optimized distribution algorithm - O(n) instead of O(n²)
+export function distributeItems<T extends { width: number; height: number }>(
   items: T[],
   columnCount: number,
   columnWidth: number,
@@ -29,11 +30,21 @@ export function distributePhotos<T extends { width: number; height: number }>(
   const heights = Array(columnCount).fill(0)
 
   items.forEach((item) => {
-    const shortest = heights.indexOf(Math.min(...heights))
-    columns[shortest].push(item)
+    // Find shortest column efficiently without Math.min + indexOf
+    let shortestIndex = 0
+    let shortestHeight = heights[0]
+
+    for (let i = 1; i < heights.length; i++) {
+      if (heights[i] < shortestHeight) {
+        shortestHeight = heights[i]
+        shortestIndex = i
+      }
+    }
+
+    columns[shortestIndex].push(item)
 
     const aspect = item.height / item.width
-    heights[shortest] += columnWidth * aspect + gap
+    heights[shortestIndex] += columnWidth * aspect + gap
   })
 
   return columns

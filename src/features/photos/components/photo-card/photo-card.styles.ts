@@ -1,24 +1,29 @@
 import styled from 'styled-components'
 
-import { DSModal } from '../../../components/shared/modal/modal.component'
+import { DSButton } from '../../../../components/shared/button/button.component'
+import { DSModal } from '../../../../components/shared/modal/modal.component'
 
-export const SCTileTrigger = styled(DSModal.Trigger)`
-  all: unset;
-  cursor: pointer;
-  display: block;
-  width: 100%;
-`
-
-export const SCImageContainer = styled.div<{ width: number; height: number }>`
-  border-radius: ${({ theme }) => theme.radius.surface};
+export const SCCardContainer = styled.div<{ width: number; height: number }>`
+  border-radius: ${({ theme }) => theme.radius.lg};
   position: relative;
   height: ${({ height }) => height}px;
   overflow: hidden;
-  transition: transform 0.2s ease-out;
   width: ${({ width }) => width}px;
 
-  &:hover {
+  img {
+    transition: transform 0.25s ease;
+  }
+
+  &:hover img,
+  &:focus-within img {
     transform: scale(1.02);
+  }
+
+  &:focus-within img {
+    outline: 2px solid ${({ theme }) => theme.colors['emphasis-high-fg']};
+    outline-style: solid;
+    outline-offset: -10px;
+    border-radius: ${({ theme }) => theme.radius.xl};
   }
 `
 
@@ -32,9 +37,9 @@ export const SCActionContainer = styled.div`
   display: flex;
   justify-content: space-between;
   left: 0;
-  margin-bottom: ${({ theme }) => `-${theme.spacings[12]}`};
+  margin-bottom: ${({ theme }) => `-${theme.spacings['8']}`};
   opacity: 0;
-  padding: ${({ theme }) => theme.spacings[16]};
+  padding: ${({ theme }) => theme.spacings['16']};
   position: absolute;
   right: 0;
   visibility: hidden;
@@ -52,9 +57,7 @@ export const SCActionContainer = styled.div`
   );
 `
 
-export const SCTile = styled.figure.withConfig({
-  shouldForwardProp: (prop) => prop !== 'width' && prop !== 'height',
-})<{ width: number; height: number }>`
+export const SCCard = styled.figure<{ width: number; height: number }>`
   aspect-ratio: ${({ width, height }) => `${width} / ${height}`};
   border-radius: ${({ theme }) => theme.radius.surface};
   display: flex;
@@ -65,5 +68,19 @@ export const SCTile = styled.figure.withConfig({
     margin-bottom: 0;
     opacity: 1;
     visibility: visible;
+  }
+`
+export const SCModalTrigger = styled(DSModal.Trigger)`
+  all: unset;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+`
+
+export const SCButtonDownload = styled(DSButton)`
+  &&:focus-visible,
+  &&:focus {
+    outline-color: ${({ theme }) => theme.colors['emphasis-high-fg']};
   }
 `

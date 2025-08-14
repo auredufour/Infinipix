@@ -4,11 +4,17 @@ import { styled } from 'styled-components'
 import { DSButtonIcon } from '../../button-icon/button-icon.component'
 import { DSModalContext } from '../modal.context'
 
-export const SCModalHeader = styled.div`
+const SCModalHeader = styled.div`
   align-items: center;
-  column-gap: ${({ theme }) => theme.spacings[12]};
+  column-gap: ${({ theme }) => theme.spacings['element-gap-md']};
   display: flex;
   justify-content: space-between;
+`
+
+const SCButtonClose = styled(DSButtonIcon)`
+  position: relative;
+  right: ${({ theme }) => `-${theme.spacings['12']}`};
+  top: ${({ theme }) => `-${theme.spacings['16']}`};
 `
 
 export const DSModalHeader = ({ children }: PropsWithChildren) => {
@@ -17,11 +23,12 @@ export const DSModalHeader = ({ children }: PropsWithChildren) => {
   return (
     <SCModalHeader>
       {children}
-      <DSButtonIcon
+
+      <SCButtonClose
         name="x"
         onClick={handleOnClose}
-        aria-label="close"
-        variant="medium-emphasis"
+        ariaLabel="Close"
+        variant="low"
       />
     </SCModalHeader>
   )

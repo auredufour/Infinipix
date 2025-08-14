@@ -1,4 +1,4 @@
-import { memo, useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 
 import { SCAvatarRoot, SCInitialsFallback } from './avatar.styles'
 import type { DSAvatarProps } from './avatar.types'
@@ -8,20 +8,27 @@ export const DSAvatar = memo(
   ({ alt = '', name, size = 'medium', src, ...rest }: DSAvatarProps) => {
     const [loaded, setLoaded] = useState<boolean>(false)
 
-    const showImage = Boolean(src) && loaded
+    const handleOnLoad = useCallback(() => {
+      setLoaded(true)
+    }, [])
+
+    const handleOnError = useCallback(() => {
+      setLoaded(false)
+    }, [])
 
     return (
       <SCAvatarRoot $size={size} aria-label={name} {...rest}>
         {src && (
           <img
             alt={alt || name || 'avatar'}
-            onError={() => setLoaded(false)}
-            onLoad={() => setLoaded(true)}
+            loading="lazy"
+            onError={handleOnError}
+            onLoad={handleOnLoad}
             src={src}
           />
         )}
 
-        {!showImage && (
+        {(!src || !loaded) && (
           <SCInitialsFallback>{getInitials(name || alt)}</SCInitialsFallback>
         )}
       </SCAvatarRoot>

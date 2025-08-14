@@ -1,77 +1,58 @@
 import styled from 'styled-components'
 
+import { interactiveElementStyles } from '../../../shared/utils/style.utils'
 import type { AppTheme } from '../../../styles/themes/types'
+import {
+  getActiveColor,
+  getBackgroundColor,
+  getColor,
+} from '../button/button.styles'
 import type { DSButtoniconProps } from './button-icon.types'
 
-// Internal props that won't reach the DOM
 type StyledProps = {
-  $variant?: DSButtoniconProps['variant']
   $size?: DSButtoniconProps['size']
+  $variant?: DSButtoniconProps['variant']
 }
 
-const getSize = (size: StyledProps['$size'] = 'medium') => {
-  const map = {
-    small: '32px',
-    medium: '40px',
-    large: '48px',
-  } as const
-  return map[size]
-}
+const SIZE_MAP = {
+  small: (theme: AppTheme) => theme.spacings['16'],
+  medium: (theme: AppTheme) => theme.spacings['24'],
+} as const
 
-const getBackgroundColor = (
-  theme: AppTheme,
-  variant: StyledProps['$variant'] = 'plain',
-) => {
-  const map = {
-    plain: 'transparent',
-    'medium-emphasis': theme.colors['soft-bg'],
-    'high-emphasis': theme.colors['highlight-bg'],
-  } as const
-  return map[variant as keyof typeof map]
-}
-
-const getColor = (
-  theme: AppTheme,
-  variant: StyledProps['$variant'] = 'plain',
-) => {
-  const map = {
-    plain: theme.colors['strong-fg'],
-    'high-emphasis': theme.colors['strong-fg-inverted'],
-  } as const
-  return map[variant as keyof typeof map]
-}
+const getSize = (size: StyledProps['$size'] = 'medium', theme: AppTheme) =>
+  SIZE_MAP[size](theme)
 
 export const SCButtonIcon = styled.button<{
   $variant: DSButtoniconProps['variant']
   $size: DSButtoniconProps['size']
 }>`
   ${({ theme, $variant, $size }) => `
-  --buttonSize: ${getSize($size)};
-  --backgroundColor: ${getBackgroundColor(theme, $variant)};
-  --color: ${getColor(theme, $variant)};
+  --colorBg: ${getBackgroundColor(theme, $variant)};
+  --colorFg: ${getColor(theme, $variant)};
+  --size: ${getSize($size, theme)};
   `}
 
   align-items: center;
-  background-color: var(--backgroundColor);
-  border: 0;
+  background-color: var(--colorBg);
   border-radius: ${({ theme }) => theme.radius.full};
-  color: var(--color);
+  border: 0;
+  color: var(--colorFg);
   cursor: pointer;
   display: inline-flex;
-  height: var(--buttonSize);
   justify-content: center;
   outline: none;
-  padding: 0;
-  width: var(--buttonSize);
-  transition: background-color 0.25s ease;
+  padding: ${({ theme, $variant }) =>
+    $variant === 'plain' ? 0 : theme.spacings['element-gap-sm']};
+  transition: ${({ theme }) => theme.motions['transition-base']};
 
-  &:hover,
-  &:focus-visible {
-    background-color: color-mix(in srgb, var(--backgroundColor) 80%, black);
+  svg {
+    stroke: var(--colorFg);
+    color: var(--colorFg);
   }
 
-  &:focus-visible {
-    outline-offset: 2px;
-    outline: 2px solid ${({ theme }) => theme.colors['strong-fg']};
-  }
+  ${({ theme, $variant }) =>
+    interactiveElementStyles({
+      colorBg: getActiveColor(theme, $variant),
+      colorOutline: theme.colors['emphasis-low-fg'],
+    })}
 `

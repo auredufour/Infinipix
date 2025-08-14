@@ -1,4 +1,4 @@
-import type { PaginationParams } from './photo.types'
+import type { PaginationParams } from '../photo.types'
 
 const BASE = import.meta.env.VITE_PHOTO_API_BASE ?? 'https://picsum.photos'
 

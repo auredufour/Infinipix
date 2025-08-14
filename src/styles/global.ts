@@ -73,12 +73,13 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
   body {
     font-family: 'Canva Sans','Helvetica Neue', Roboto, -apple-system, blinkmacsystemfont, sans-serifsystem-ui, sans-serif;
     background: ${({ theme }) => theme.colors['app-bg']};
-    color: ${({ theme }) => theme.colors['strong-fg']};
+    color: ${({ theme }) => theme.colors['emphasis-low-fg']};
   }
 
   a {
     text-decoration: none;
     outline: none;
+    color: inherit;
   }
 
   button {
@@ -93,6 +94,11 @@ export const GlobalStyle = createGlobalStyle<{ theme: AppTheme }>`
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+    animation: none;
   }
 
   @font-face {

@@ -1,15 +1,15 @@
-import type { PhotoCardProps as ImportedPhotoCardProps } from './photo-tile.types'
-
 export type PhotoCardProps = {
   alt?: string
   author: string
+  columnWidth: number
   downloadUrl: string
-  src: string
-  width: number
   height: number
   id: string
+  isLoaded: boolean
   onLoad?: () => void
-  isLoaded?: boolean
+  onOpen: () => void
+  src: string
+  width: number
 }
 
 export interface PhotoCardComponentProps {
@@ -22,10 +22,4 @@ export interface PhotoCardComponentProps {
   downloadUrl: string
   id: string
   src: string
-}
-
-export interface PhotoTileProps extends ImportedPhotoCardProps {
-  onOpen: () => void
-  columnWidth: number
-  isLoaded: boolean
 }

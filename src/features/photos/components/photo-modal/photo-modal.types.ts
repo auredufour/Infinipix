@@ -1,4 +1,4 @@
-import type { Photo } from '../photo.types'
+import type { Photo } from '../../photo.types'
 
 export interface PhotoModalProps {
   photo: Photo
@@ -23,5 +23,9 @@ export interface PhotoModalImageProps {
 
 export interface PhotoModalHeaderProps {
   author: string
+  onDownload: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
+
+export interface PhotoModalFooterProps {
   onDownload: (e: React.MouseEvent<HTMLButtonElement>) => void
 }

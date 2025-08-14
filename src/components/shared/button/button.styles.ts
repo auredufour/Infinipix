@@ -1,74 +1,101 @@
 import styled from 'styled-components'
 
+import { interactiveElementStyles } from '../../../shared/utils/style.utils'
 import type { AppTheme } from '../../../styles/themes/types'
 import type { DSButtonProps } from './button.types'
 
 type StyledProps = { $variant?: DSButtonProps['variant'] }
 
-const getBackgroundColor = (
+const BACKGROUND_COLOR_MAP = {
+  plain: () => 'transparent',
+  low: () => 'transparent',
+  medium: (theme: AppTheme) => theme.colors['emphasis-medium-bg'],
+  high: (theme: AppTheme) => theme.colors['emphasis-high-bg'],
+  highlight: (theme: AppTheme) => theme.colors['highlight-bg'],
+} as const
+
+const COLOR_MAP = {
+  plain: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  low: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  medium: (theme: AppTheme) => theme.colors['emphasis-medium-fg'],
+  high: (theme: AppTheme) => theme.colors['emphasis-high-fg'],
+  highlight: (theme: AppTheme) => theme.colors['highlight-fg'],
+} as const
+
+const ACTIVE_COLOR_MAP = {
+  plain: () => 'transparent',
+  low: (theme: AppTheme) => theme.colors['emphasis-low-bg-active'],
+  medium: (theme: AppTheme) => theme.colors['emphasis-medium-bg-active'],
+  high: (theme: AppTheme) => theme.colors['emphasis-high-bg-active'],
+  highlight: (theme: AppTheme) => theme.colors['highlight-bg-active'],
+} as const
+
+const BORDER_COLOR_MAP = {
+  plain: () => 'transparent',
+  low: (theme: AppTheme) => theme.colors['outline'],
+  medium: (theme: AppTheme) => theme.colors['emphasis-medium-bg'],
+  high: (theme: AppTheme) => theme.colors['emphasis-high-bg'],
+  highlight: (theme: AppTheme) => theme.colors['highlight-bg'],
+} as const
+
+const OUTLINE_COLOR_MAP = {
+  plain: () => 'transparent',
+  low: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  medium: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  high: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+  highlight: (theme: AppTheme) => theme.colors['emphasis-low-fg'],
+} as const
+
+export const getBackgroundColor = (
   theme: AppTheme,
   variant: StyledProps['$variant'] = 'plain',
-) => {
-  const map = {
-    plain: 'transparent',
-    'low-emphasis': theme.colors['app-bg'],
-    'high-emphasis': theme.colors['highlight-bg'],
-  } as const
+) => BACKGROUND_COLOR_MAP[variant || 'plain'](theme)
 
-  return map[variant as keyof typeof map] ?? map.plain
-}
-
-const getColor = (
+export const getColor = (
   theme: AppTheme,
   variant: StyledProps['$variant'] = 'plain',
-) => {
-  const map = {
-    plain: theme.colors['strong-fg'],
-    'low-emphasis': theme.colors['strong-fg'],
-    'high-emphasis': theme.colors['strong-fg-inverted'],
-  } as const
+) => COLOR_MAP[variant || 'plain'](theme)
 
-  return map[variant as keyof typeof map] ?? map.plain
-}
+export const getActiveColor = (
+  theme: AppTheme,
+  variant: StyledProps['$variant'] = 'plain',
+) => ACTIVE_COLOR_MAP[variant || 'plain'](theme)
 
 const getBorderColor = (
   theme: AppTheme,
   variant: StyledProps['$variant'] = 'plain',
-) => {
-  const map = {
-    plain: 'transparent',
-    'low-emphasis': theme.colors['outline'],
-    'high-emphasis': theme.colors['highlight-bg'],
-  } as const
-  return map[variant as keyof typeof map] ?? map.plain
-}
+) => BORDER_COLOR_MAP[variant || 'plain'](theme)
+
+const getOutlineColor = (
+  theme: AppTheme,
+  variant: StyledProps['$variant'] = 'plain',
+) => OUTLINE_COLOR_MAP[variant || 'plain'](theme)
 
 export const SCButton = styled.button<{ $variant: DSButtonProps['variant'] }>`
   ${({ theme, $variant }) => `
---backgroundColor: ${getBackgroundColor(theme, $variant)};
---borderColor: ${getBorderColor(theme, $variant)};
---color: ${getColor(theme, $variant)};
+  --colorBg: ${getBackgroundColor(theme, $variant)};
+  --colorFg: ${getColor(theme, $variant)};
+  --colorBorder: ${getBorderColor(theme, $variant)};
 `}
 
-  background-color: var(--backgroundColor);
-  border-radius: ${({ theme }) => theme.radius.surface};
-  border: 1px solid var(--borderColor);
-  color: var(--color);
-  font-weight: 500;
-  outline: none;
-  padding: ${({ theme }) => `${theme.spacings[12]} ${theme.spacings[24]}`};
-  transition: background-color 0.25s ease;
-  display: flex;
   align-items: center;
-  column-gap: ${({ theme }) => theme.spacings[8]};
+  background-color: var(--colorBorder);
+  border-radius: ${({ theme }) => theme.radius.interactive};
+  border: 1px solid var(--colorBg);
+  color: var(--colorFg);
+  column-gap: ${({ theme }) => theme.spacings['element-gap-sm']};
+  display: flex;
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  outline: none;
+  padding: ${({ theme, $variant }) =>
+    $variant === 'plain'
+      ? 0
+      : `${theme.spacings['12']} ${theme.spacings['24']}`};
+  transition: ${({ theme }) => theme.motions['transition-base']};
 
-  &:hover,
-  &:focus-visible {
-    background-color: color-mix(in srgb, var(--backgroundColor) 80%, black);
-  }
-
-  &:focus-visible {
-    outline-offset: 2px;
-    outline: 2px solid ${({ theme }) => theme.colors['strong-fg']};
-  }
+  ${({ theme, $variant }) =>
+    interactiveElementStyles({
+      colorBg: getActiveColor(theme, $variant),
+      colorOutline: getOutlineColor(theme, $variant),
+    })}
 `

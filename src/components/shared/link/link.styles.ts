@@ -1,23 +1,26 @@
 import styled from 'styled-components'
 
+import { interactiveElementFocusVisible } from '../../../shared/utils/style.utils'
 import type { DSLinkProps } from './link.types'
 
 export const SCLink = styled.a<{ $variant: DSLinkProps['variant'] }>`
-  border-radius: ${({ theme }) => theme.radius.full};
-    color: ${({ theme }) => theme.colors['strong-fg']};
-    display: inline-block;
-    font-weight: ${({ theme }) => theme.fontWeight.medium};
-    padding: ${({ theme }) => `${theme.spacings[12]} ${theme.spacings[16]}`};
-    text-decoration: none;
-    transition: background-color 0.25s ease;
+  ${({ theme }) => `
+  --link-color: ${theme.colors['emphasis-low-fg']};`}
 
-    &:hover, &:focus-visible {
-        background-color:  ${({ theme }) => theme.colors['strong-bg-control']};
-    }
+  border-radius: ${({ theme }) => theme.radius.interactive};
+  color: var(--link-color);
+  display: inline-block;
+  font-weight: ${({ theme }) => theme.fontWeight.medium};
+  padding: ${({ theme, $variant }) =>
+    $variant === 'plain'
+      ? 0
+      : `${theme.spacings['12']} ${theme.spacings['16']}`};
+  text-decoration: none;
+  transition: ${({ theme }) => theme.motions['transition-base']};
 
-    &:focus-visible {
-        outline: 2px solid ${({ theme }) => theme.colors['strong-fg']};
-        outline-offset: 2px;
-    }
-  }
+  ${({ theme }) =>
+    interactiveElementFocusVisible({
+      colorBg: theme.colors['emphasis-low-bg-active'],
+      colorOutline: theme.colors['emphasis-low-fg'],
+    })}
 `

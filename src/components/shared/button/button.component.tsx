@@ -7,11 +7,11 @@ export const DSButton = memo(
   forwardRef<HTMLButtonElement, DSButtonProps>(
     (
       {
+        accessoryLeft,
+        accessoryRight,
         children,
         type = 'button',
         variant = 'plain',
-        accessoryLeft,
-        accessoryRight,
         ...props
       },
       ref,

@@ -6,21 +6,21 @@ import type { DSButtoniconProps } from './button-icon.types'
 
 export const DSButtonIcon = memo(
   ({
-    type = 'button',
-    variant = 'plain',
-    size = 'medium',
-    name,
     ariaLabel,
+    name,
+    size = 'medium',
+    type = 'button',
+    variant = 'low',
     ...props
   }: DSButtoniconProps) => (
     <SCButtonIcon
-      type={type}
-      $variant={variant}
       $size={size}
-      aria-label={ariaLabel ?? name}
+      $variant={variant}
+      aria-label={ariaLabel}
+      type={type}
       {...props}
     >
-      <DSIcon name={name} ariaLabel={ariaLabel ?? name} />
+      <DSIcon name={name} />
     </SCButtonIcon>
   ),
 )

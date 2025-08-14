@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { SCColumn, SCColumnsWrapper, SCGridContainer } from './grid.styles'
 import type { DSGridMasonryProps } from './grid.types'
 import {
   calculateColumnWidth,
   createEmptyColumns,
-  distributePhotos,
+  distributeItems,
   getColumnCount,
 } from './grid.utils'
 
@@ -21,49 +21,74 @@ export const DSGridMansory = <
   const [columnWidth, setColumnWidth] = useState(0)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  // Calculate number of columns based on screen width
   const calculateColumns = useCallback(() => {
     if (!containerRef.current) return
 
     const containerWidth = containerRef.current.offsetWidth
     const count = getColumnCount(window.innerWidth)
 
-    setColumnCount((prev) => {
-      if (prev !== count) setColumns(createEmptyColumns<T>(count))
-      return count
-    })
+    if (columnCount !== count) {
+      setColumnCount(count)
+      setColumns(createEmptyColumns(count))
+    }
 
-    setColumnWidth(calculateColumnWidth(containerWidth, count, gap))
-  }, [gap])
+    const newColumnWidth = Math.round(
+      calculateColumnWidth(containerWidth, count, gap),
+    )
+    if (columnWidth !== newColumnWidth) {
+      setColumnWidth(newColumnWidth)
+    }
+  }, [gap, columnCount, columnWidth])
 
-  // Distribute items across columns
+  const handleOnResize = useCallback(() => {
+    let requestAnimationFrameId: number | null = null
+
+    return () => {
+      if (requestAnimationFrameId) {
+        cancelAnimationFrame(requestAnimationFrameId)
+      }
+
+      requestAnimationFrameId = requestAnimationFrame(() => {
+        calculateColumns()
+        requestAnimationFrameId = null
+      })
+    }
+  }, [calculateColumns])()
+
+  const distributedColumns = useMemo(
+    () =>
+      columnCount === 0 || !data.length
+        ? []
+        : distributeItems(data, columnCount, columnWidth, gap),
+    [data, columnCount, columnWidth, gap],
+  )
+
   useEffect(() => {
-    if (columnCount === 0 || !data.length) return
+    setColumns(distributedColumns)
+  }, [distributedColumns])
 
-    setColumns(distributePhotos(data, columnCount, columnWidth, gap))
-  }, [data, columnCount, columnWidth, gap])
-
-  // Handle window resize
   useEffect(() => {
     calculateColumns()
 
-    const handleResize = () => {
-      calculateColumns()
-    }
+    window.addEventListener('resize', handleOnResize)
+    return () => window.removeEventListener('resize', handleOnResize)
+  }, [calculateColumns, handleOnResize])
 
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [calculateColumns])
+  const memoizedColumns = useMemo(
+    () =>
+      columns.map((column, columnIndex) => (
+        <SCColumn key={`column-${columnIndex}`} $gap={gap} $width={columnWidth}>
+          {column.map((item) => (
+            <div key={item.id}>{renderItem(item, columnWidth)}</div>
+          ))}
+        </SCColumn>
+      )),
+    [columns, gap, columnWidth, renderItem],
+  )
 
   return (
     <SCGridContainer ref={containerRef}>
-      <SCColumnsWrapper $gap={gap}>
-        {columns.map((column, columnIndex) => (
-          <SCColumn key={columnIndex} $gap={gap} $width={columnWidth}>
-            {column.map((item) => renderItem(item as T, columnWidth))}
-          </SCColumn>
-        ))}
-      </SCColumnsWrapper>
+      <SCColumnsWrapper $gap={gap}>{memoizedColumns}</SCColumnsWrapper>
     </SCGridContainer>
   )
 }

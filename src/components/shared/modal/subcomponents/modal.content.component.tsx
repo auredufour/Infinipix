@@ -1,14 +1,9 @@
-import {
-  type PropsWithChildren,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-} from 'react'
+import { memo, useCallback, useContext, useEffect, useRef } from 'react'
 import ReactDOM from 'react-dom'
 import styled, { keyframes } from 'styled-components'
 
 import { DSModalContext } from '../modal.context'
+import type { DSModalContentProps } from '../modal.types'
 
 const FOCUSABLE_SELECTORS =
   'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
@@ -21,126 +16,144 @@ const fadeIn = keyframes`
 export const SCModalOverlay = styled.div`
   animation: ${fadeIn} 150ms ease-out;
   background: ${({ theme }) => theme.colors['overlay-bg']};
-  display: grid;
+  display: flex;
   inset: 0;
-  place-items: center;
+  justify-content: center;
+  align-items: center;
   position: fixed;
   z-index: 2000;
 `
 
 export const SCDialog = styled.div<{ $maxWidth?: string }>`
-  background: ${({ theme }) => theme.colors['app-bg']};
+  background: ${({ theme }) => theme.colors['surface-bg']};
   border-radius: ${({ theme }) => theme.radius.surface};
-  box-shadow: ${({ theme }) => theme.shadows.overlay};
-  height: calc(100vh - 160px);
-  max-width: ${({ $maxWidth }) => $maxWidth || '1600px'};
+  box-shadow: ${({ theme }) => theme.shadows.modal};
+  height: ${({ theme }) => `calc(100vh - ${theme.spacings['64']} * 2)`};
+  max-width: ${({ $maxWidth, theme }) =>
+    $maxWidth || theme.spacings['content-max-width']};
   overflow: hidden;
-  padding: ${({ theme }) => theme.spacings[24]};
+  padding: ${({ theme }) => theme.spacings['24']};
   position: relative;
   width: 100%;
+  margin: ${({ theme }) => theme.spacings['24']};
+
+  @media (min-width: 768px) {
+    height: ${({ theme }) => `calc(100vh - ${theme.spacings['80']} * 2)`};
+  }
 `
 
-export interface DSModalContentProps extends PropsWithChildren {
-  maxWidth?: string
-  ariaLabel?: string
-}
+export const DSModalContent = memo(
+  ({ ariaLabel, children, maxWidth }: DSModalContentProps) => {
+    const { isOpen, handleOnClose } = useContext(DSModalContext)
+    const containerRef = useRef<HTMLDivElement>(null)
 
-export const DSModalContent = ({
-  children,
-  maxWidth,
-  ariaLabel,
-}: DSModalContentProps) => {
-  const { isOpen, handleOnClose } = useContext(DSModalContext)
-  const containerRef = useRef<HTMLDivElement>(null)
-
-  // lock scroll when open
-  useEffect(() => {
-    if (!isOpen) return
-
-    const { body } = document
-    const prev = body.style.overflow
-    body.style.overflow = 'hidden'
-
-    return () => {
-      body.style.overflow = prev
-    }
-  }, [isOpen])
-
-  const focusFirstElement = useCallback(() => {
-    const dialogContainer = containerRef.current
-    if (!dialogContainer) return
-
-    const focusableElements =
-      dialogContainer.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
-
-    if (focusableElements.length > 0) {
-      requestAnimationFrame(() => {
-        const firstElement = focusableElements[0]
-        if (firstElement instanceof HTMLElement) {
-          firstElement.focus()
+    const handleOnClick = useCallback(
+      (evt: React.MouseEvent) => {
+        if (evt.target === evt.currentTarget) {
+          handleOnClose()
         }
-      })
-    } else {
-      containerRef.current?.focus()
-    }
-  }, [])
+      },
+      [handleOnClose],
+    )
 
-  const setupFocusTrap = useCallback(() => {
-    const dialogContainer = containerRef.current
-    if (!dialogContainer) return
+    // lock scroll when open
+    useEffect(() => {
+      if (!isOpen) return
 
-    const handleKeyDown = (evt: KeyboardEvent) => {
-      if (evt.key !== 'Tab') return
+      const { body } = document
+      const prev = body.style.overflow
+      body.style.overflow = 'hidden'
+
+      return () => {
+        body.style.overflow = prev
+      }
+    }, [isOpen])
+
+    const focusFirstElement = useCallback(() => {
+      const dialogContainer = containerRef.current
+      if (!dialogContainer) return
 
       const focusableElements =
         dialogContainer.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
 
-      if (focusableElements.length === 0) {
-        evt.preventDefault()
-        return
-      }
-
-      const first = focusableElements[0]
-      const last = focusableElements[focusableElements.length - 1]
-
-      if (evt.shiftKey) {
-        if (document.activeElement === first) {
-          evt.preventDefault()
-          last.focus()
-        }
+      if (focusableElements.length > 0) {
+        requestAnimationFrame(() => {
+          const firstElement = focusableElements[0]
+          if (firstElement instanceof HTMLElement) {
+            firstElement.focus()
+          }
+        })
       } else {
-        if (document.activeElement === last) {
+        containerRef.current?.focus()
+      }
+    }, [])
+
+    const setupFocusTrap = useCallback(() => {
+      const dialogContainer = containerRef.current
+      if (!dialogContainer) return
+
+      const handleKeyDown = (evt: KeyboardEvent) => {
+        if (evt.key === 'Escape') {
+          handleOnClose()
+          return
+        }
+
+        if (evt.key !== 'Tab') return
+
+        const focusableElements =
+          dialogContainer.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTORS)
+
+        if (focusableElements.length === 0) {
           evt.preventDefault()
-          first.focus()
+          return
+        }
+
+        const first = focusableElements[0]
+        const last = focusableElements[focusableElements.length - 1]
+
+        if (evt.shiftKey) {
+          if (document.activeElement === first) {
+            evt.preventDefault()
+            last.focus()
+          }
+        } else {
+          if (document.activeElement === last) {
+            evt.preventDefault()
+            first.focus()
+          }
         }
       }
-    }
 
-    dialogContainer.addEventListener('keydown', handleKeyDown)
-    return () => dialogContainer.removeEventListener('keydown', handleKeyDown)
-  }, [])
+      dialogContainer.addEventListener('keydown', handleKeyDown)
+      return () => dialogContainer.removeEventListener('keydown', handleKeyDown)
+    }, [handleOnClose])
 
-  useEffect(() => {
-    if (isOpen) {
-      setupFocusTrap()
-      focusFirstElement()
-    }
-  }, [isOpen, focusFirstElement])
+    useEffect(() => {
+      if (isOpen) {
+        const cleanup = setupFocusTrap()
+        focusFirstElement()
 
-  if (!isOpen) return null
+        return cleanup
+      }
+    }, [isOpen, focusFirstElement, setupFocusTrap])
 
-  const dialog = (
-    <SCModalOverlay
-      role="dialog"
-      aria-modal="true"
-      aria-label={ariaLabel}
-      onClick={handleOnClose}
-    >
-      <SCDialog $maxWidth={maxWidth} ref={containerRef}>
-        {children}
-      </SCDialog>
-    </SCModalOverlay>
-  )
+    if (!isOpen) return null
 
-  return ReactDOM.createPortal(dialog, document.body)
-}
+    const dialog = (
+      <SCModalOverlay
+        aria-label={ariaLabel}
+        aria-modal="true"
+        onClick={handleOnClick}
+        role="dialog"
+      >
+        <SCDialog $maxWidth={maxWidth} ref={containerRef}>
+          {children}
+        </SCDialog>
+      </SCModalOverlay>
+    )
+
+    return ReactDOM.createPortal(dialog, document.body)
+  },
+)
+
+DSModalContent.displayName = 'DSModalContent'
